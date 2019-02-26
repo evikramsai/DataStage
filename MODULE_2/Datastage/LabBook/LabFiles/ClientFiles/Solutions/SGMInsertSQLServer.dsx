@@ -1,0 +1,907 @@
+BEGIN HEADER
+   CharacterSet "ENGLISH"
+   ExportingTool "Ascential DataStage Export"
+   ToolVersion "4"
+   ServerName "localhost"
+   ToolInstanceID "ds434v2"
+   MDISVersion "1.0"
+   Date "2006-01-16"
+   Time "12.05.25"
+   ServerVersion "7.5x2"
+END HEADER
+BEGIN DSJOB
+   Identifier "SGMInsertSQLServer"
+   DateModified "2006-01-16"
+   TimeModified "11.52.16"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "SGMInsertSQLServer"
+      NextID "1"
+      Container "V0"
+      JobVersion "50.0.0"
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "Student_No"
+         Prompt "Student_No"
+         Default "01"
+         ParamType "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "DSN"
+         Prompt "Data Source Name"
+         Default "SQLServ"
+         ParamType "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceMode"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSeq"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceRecords"
+         Value "100"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSkip"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TracePeriod"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXDateFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXTimeFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXTimeStampFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXDecimalSeparator="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MessageHandler"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "IdentList"
+         Value "Selling_Group_Mappings|xform|SQLServer_inst1_SGM|Peek_6"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "ClientCodePage"
+         Value "1252"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V0S5P1_password"
+         Value "L<J@0KVH==3L4OGID9J5AKA7"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      OrchestrateCode =+=+=+=
+#################################################################
+#### STAGE: Selling_Group_Mappings
+## Operator
+import
+## Operator options
+-schema record
+  {final_delim=end, record_delim='\\n', delim=',', quote=double}
+(
+  Selling_Group_Code:int32 {quote=none};
+  Selling_Group_Desc:string[max=50];
+  Special_Handling_Code:int32 {quote=none};
+  Distribution_Channel_Description:string[max=50];
+)
+-file  'c:/ds434Files/Selling_Group_Mapping.txt'
+-rejects continue
+-reportProgress yes
+-firstLineColumnNames
+
+## General options
+[ident('Selling_Group_Mappings'); jobmon_ident('Selling_Group_Mappings')]
+## Outputs
+0> [] 'Selling_Group_Mappings:Selling_Group_Mappings.v'
+;
+
+#################################################################
+#### STAGE: xform
+## Operator
+transform
+## Operator options
+-flag run
+-name 'V0S1_SGMInsertSQLServer_xform'
+
+## General options
+[ident('xform'); jobmon_ident('xform')]
+## Inputs
+0< 'Selling_Group_Mappings:Selling_Group_Mappings.v'
+## Outputs
+0> [] 'xform:SQLServer_inst1_SGM.v'
+;
+
+#################################################################
+#### STAGE: SQLServer_inst1_SGM
+## Operator
+sqlsrvrupsert
+## Operator options
+-data_source '[&DSN]'
+-user 'walker2'
+-password [&__V0S5P1_password]
+-upsertmode insert_update
+-insert 'INSERT 
+INTO 
+SGM_[&Student_No] 
+(Selling_Grp_Code, Selling_Grp_Desc, Spec_Handling_Code, Distr_Channel_Desc) 
+VALUES 
+(ORCHESTRATE.Selling_Grp_Code, ORCHESTRATE.Selling_Grp_Desc, ORCHESTRATE.Spec_Handling_Code, ORCHESTRATE.Distr_Channel_Desc)'
+-update 'UPDATE 
+SGM_[&Student_No] 
+SET 
+Selling_Grp_Desc = ORCHESTRATE.Selling_Grp_Desc, Spec_Handling_Code = ORCHESTRATE.Spec_Handling_Code, Distr_Channel_Desc = ORCHESTRATE.Distr_Channel_Desc 
+WHERE 
+(Selling_Grp_Code = ORCHESTRATE.Selling_Grp_Code)'
+-reject
+
+## General options
+[ident('SQLServer_inst1_SGM'); jobmon_ident('SQLServer_inst1_SGM')]
+## Inputs
+0< 'xform:SQLServer_inst1_SGM.v'
+## Outputs
+0> [] 'SQLServer_inst1_SGM:DSLink7.v'
+;
+
+#################################################################
+#### STAGE: Peek_6
+## Operator
+peek
+## Operator options
+-nrecs 10
+-name
+
+## General options
+[ident('Peek_6'); jobmon_ident('Peek_6')]
+## Inputs
+0< 'SQLServer_inst1_SGM:DSLink7.v'
+;
+
+
+=+=+=+=
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "3"
+      Category "ds434"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S1|V0S5|V0S6"
+      StageXPos "120|336|600|672"
+      StageYPos "264|264|264|456"
+      StageTypes "CCustomStage|CTransformerStage|CCustomStage|CCustomStage"
+      NextStageID "9"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48"
+      StageYSize "48|48|48|48"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      ContainerViewSizing "0000 0000 0774 0567 0000 0000 0000 0000"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "Selling_Group_Mappings"
+      NextID "2"
+      OutputPins "V0S0P1"
+      StageType "PxSequentialFile"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "Selling_Group_Mappings"
+      Partner "V0S1"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "schema"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value "file"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "file "
+         Value "\(2)\(2)0\(1)\(3)file \(2)c:/ds434Files/Selling_Group_Mapping.txt\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "keepPartitions"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "missingFile"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rejects"
+         Value "continue"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reportProgress"
+         Value "yes"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "firstLineColumnNames"
+         Value "firstLineColumnNames"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "filepattern"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Selling_Group_Code"
+         Description "Selling_Group_Code:int32 {quote=none}"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Selling_Group_Code"
+         APTFieldProp "quote=none"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Selling_Group_Desc"
+         Description "Selling_Group_Desc:string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Selling_Group_Desc"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Special_Handling_Code"
+         Description "Special_Handling_Code:int32 {quote=none,}"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Special_Handling_Code"
+         APTFieldProp "quote=none,"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Distribution_Channel_Description"
+         Description "Distribution_Channel_Description:string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Distribution_Channel_Description"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SchemaFormat"
+         Value "final_delim=end, record_delim='\\n', delim=',', quote=double, padchar='#'"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "210"
+      TopTextPos "288"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTransformerStage"
+      Readonly "0"
+      Name "xform"
+      NextID "3"
+      InputPins "V0S1P1"
+      OutputPins "V0S1P2"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxClassName"
+         Value "V0S1_SGMInsertSQLServer_xform"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxGenCode"
+         Value =+=+=+=
+//
+// Generated file to implement the V0S1_SGMInsertSQLServer_xform transform operator.
+//
+
+// define our input/output link names
+inputname 0 Selling_Group_Mappings;
+outputname 0 SQLServer_inst1_SGM;
+
+initialize {
+	// define our row rejected variable
+	int8 RowRejected0;
+
+	// define our null set variable
+	int8 NullSetVar0;
+
+}
+
+mainloop {
+	// initialise our row rejected variable
+	RowRejected0 = 1;
+
+	// evaluate columns (no constraints) for link: SQLServer_inst1_SGM
+	SQLServer_inst1_SGM.Selling_Grp_Code = Selling_Group_Mappings.Selling_Group_Code;
+	SQLServer_inst1_SGM.Selling_Grp_Desc = Selling_Group_Mappings.Selling_Group_Desc;
+	SQLServer_inst1_SGM.Spec_Handling_Code = Selling_Group_Mappings.Special_Handling_Code;
+	SQLServer_inst1_SGM.Distr_Channel_Desc = Selling_Group_Mappings.Distribution_Channel_Description;
+	writerecord 0;
+	RowRejected0 = 0;
+}
+
+finish {
+}
+
+=+=+=+=
+      END DSSUBRECORD
+      ValidationStatus "0"
+      StageType "CTransformerStage"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxInput"
+      Readonly "0"
+      Name "Selling_Group_Mappings"
+      Partner "V0S0"
+      LinkType "1"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  Selling_Group_Code:int32;
+  Selling_Group_Desc:string[max=50];
+  Special_Handling_Code:int32;
+  Distribution_Channel_Description:string[max=50];
+  inRec:*;
+)
+=+=+=+=
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxOutput"
+      Readonly "0"
+      Name "SQLServer_inst1_SGM"
+      Partner "V0S5"
+      Reject "0"
+      RowLimit "0"
+      RoutineTransforms "\(1B)"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Selling_Grp_Code"
+         Description "Selling_Group_Code:int32 {quote=none}"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "0"
+         Derivation "Selling_Group_Mappings.Selling_Group_Code"
+         Group "0"
+         ParsedDerivation "Selling_Group_Mappings.Selling_Group_Code"
+         SourceColumn "Selling_Group_Mappings.Selling_Group_Code"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         APTFieldProp "quote=none"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Selling_Grp_Desc"
+         Description "Selling_Group_Desc:string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Selling_Group_Mappings.Selling_Group_Desc"
+         Group "0"
+         ParsedDerivation "Selling_Group_Mappings.Selling_Group_Desc"
+         SourceColumn "Selling_Group_Mappings.Selling_Group_Desc"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Selling_Group_Desc"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Spec_Handling_Code"
+         Description "Special_Handling_Code:int32 {quote=none,}"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Selling_Group_Mappings.Special_Handling_Code"
+         Group "0"
+         ParsedDerivation "Selling_Group_Mappings.Special_Handling_Code"
+         SourceColumn "Selling_Group_Mappings.Special_Handling_Code"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Special_Handling_Code"
+         APTFieldProp "quote=none,"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Distr_Channel_Desc"
+         Description "Distribution_Channel_Description:string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Selling_Group_Mappings.Distribution_Channel_Description"
+         Group "0"
+         ParsedDerivation "Selling_Group_Mappings.Distribution_Channel_Description"
+         SourceColumn "Selling_Group_Mappings.Distribution_Channel_Description"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Selling_Group_Mapping_schema"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Distribution_Channel_Description"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  Selling_Grp_Code:int32;
+  Selling_Grp_Desc:string[max=50];
+  Spec_Handling_Code:int32;
+  Distr_Channel_Desc:string[max=50];
+  outRec:*;
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "457"
+      TopTextPos "288"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "SQLServer_inst1_SGM"
+      NextID "3"
+      InputPins "V0S5P1"
+      OutputPins "V0S5P2"
+      StageType "Pxsqlsvr"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "SQLServer_inst1_SGM"
+      Partner "V0S1"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "sqlsrvrupsert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "data_source"
+         Value "#DSN#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "user"
+         Value "walker2"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "password"
+         Value "L<J@0KVH==3L4OGID9J5AKA7"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Value "\(2)\(2)0\(1)\(3)tablename\(2)SGM_#Student_No#\(2)0\(1)\(3)\(3)table\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertmode"
+         Value "insert_update"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertautosql"
+         Value "yes"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "insert"
+         Value =+=+=+=
+INSERT 
+INTO 
+SGM_#Student_No# 
+(Selling_Grp_Code, Selling_Grp_Desc, Spec_Handling_Code, Distr_Channel_Desc) 
+VALUES 
+(ORCHESTRATE.Selling_Grp_Code, ORCHESTRATE.Selling_Grp_Desc, ORCHESTRATE.Spec_Handling_Code, ORCHESTRATE.Distr_Channel_Desc)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "update"
+         Value =+=+=+=
+UPDATE 
+SGM_#Student_No# 
+SET 
+Selling_Grp_Desc = ORCHESTRATE.Selling_Grp_Desc, Spec_Handling_Code = ORCHESTRATE.Spec_Handling_Code, Distr_Channel_Desc = ORCHESTRATE.Distr_Channel_Desc 
+WHERE 
+(Selling_Grp_Code = ORCHESTRATE.Selling_Grp_Code)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reject"
+         Value "reject"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "DSLink7"
+      Partner "V0S6"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value "table"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "data_source"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "user"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "password"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Value "\(2)\(2)0\(1)\(3)tablename\(2)\(2)0\(1)\(3)\(3)table\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "query"
+      END DSSUBRECORD
+      LeftTextPos "660"
+      TopTextPos "364"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S6"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "Peek_6"
+      NextID "2"
+      InputPins "V0S6P1"
+      StageType "PxPeek"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "all"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "nrecs"
+         Value "10"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "dataset"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "name"
+         Value "name"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "columns"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "field"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "part"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S6P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "DSLink7"
+      Partner "V0S5"
+      LinkType "3"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+END DSJOB

@@ -1,0 +1,21 @@
+annotations (General)
+double click to open properties
+---------------------------------------------
+Sequential file(file)
+to read and write data
+--------------------------------
+head (Development)
+used to diplay top rows 
+check partition number
+-------------------------------
+peek(Development)
+to see the data flow
+we can select number of rows
+---------------------------------------
+Sample(Development)
+to test the data
+percent 
+links 
+input configuration and output configuration
+different sequential file and configure those
+--------------------------------

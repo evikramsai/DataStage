@@ -1,0 +1,3889 @@
+BEGIN HEADER
+   CharacterSet "ENGLISH"
+   ExportingTool "Ascential DataStage Export"
+   ToolVersion "4"
+   ServerName "192.168.25.3"
+   ToolInstanceID "ds434"
+   MDISVersion "1.0"
+   Date "2005-08-10"
+   Time "10.07.56"
+   ServerVersion "7.5"
+END HEADER
+BEGIN DSJOB
+   Identifier "seq_Warehouse"
+   DateModified "2005-08-10"
+   TimeModified "10.07.02"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "seq_Warehouse"
+      NextID "3"
+      Container "V0"
+      JobVersion "50.0.0"
+      JobControlCode =+=+=+=
+* Tokens were replaced below as follows:
+* IdV0S0%%Result2%%0 <= Warehouse_01.$UserStatus
+* IdV0S0%%Result1%%1 <= Warehouse_01.$JobStatus
+* IdV0S0%%Name%%2 <= Warehouse_01.$JobName
+* IdV0S1%%Result2%%3 <= Warehouse_02.$UserStatus
+* IdV0S1%%Result1%%4 <= Warehouse_02.$JobStatus
+* IdV0S1%%Name%%5 <= Warehouse_02.$JobName
+* IdV0S2%%Result2%%6 <= Warehouse_03.$UserStatus
+* IdV0S2%%Result1%%7 <= Warehouse_03.$JobStatus
+* IdV0S2%%Name%%8 <= Warehouse_03.$JobName
+* IdV0S3%%Result2%%9 <= Warehouse_04.$UserStatus
+* IdV0S3%%Result1%%10 <= Warehouse_04.$JobStatus
+* IdV0S3%%Name%%11 <= Warehouse_04.$JobName
+*
+*** [Generated at 2005-06-14 14:58:58 - 7.5.0.25]
+   $INCLUDE DSINCLUDE DSJ_XFUNCS.H
+   EQU Time$$ Lit "Oconv(Time(), 'MTS:'):': '"
+****************************************
+* Graphical Sequencer generated code for Job seq_Warehouse
+****************************************
+   
+   seq$V1S0$count = 0
+   seq$V1S0$status = 0
+   handle$list = ""
+   id$list = ""
+   abort$list = ""
+   b$Abandoning = @False
+   rpt$all = ""
+   summary$restarting = @False
+*** Sequence start point
+   summary$ = DSMakeMsg("DSTAGE_JSG_M_0048\\Summary of sequence run", "")
+   If summary$restarting Then
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0049\\Sequence restarted after failure", ""))
+   End Else
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0051\\Sequence started", ""))
+   End
+   GoTo L$V0S0$START
+L$RETURN$1:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S0$START:
+*** Activity "Warehouse_01": Initialize job
+   jb$V0S0 = "Warehouse_01"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_01":@FM:jb$V0S0))
+   h$V0S0 = DSAttachJob(jb$V0S0, DSJ.ERRNONE)
+   If (Not(h$V0S0)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   h$V0S0 = DSPrepareJob(h$V0S0)
+   If (Not(h$V0S0)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+L$V0S0$PREPARED:
+   p$V0S0$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S0, "$APT_CONFIG_FILE", p$V0S0$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S0, "$APT_DUMP_SCORE", p$V0S0$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$3 = (FileDate)
+   err$code = DSSetParam(h$V0S0, "FileDate", p$V0S0$3)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "FileDate":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S0, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S0:@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S0
+   id$list<-1> = "V0S0"
+   GoTo L$RETURN$1
+**************************************************
+L$V0S0$FINISHED:
+   job$V0S0$status = DSGetJobInfo(h$V0S0, DSJ.JOBSTATUS)
+   job$V0S0$userstatus = DSGetJobInfo(h$V0S0, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_01":@FM:jb$V0S0:@FM:job$V0S0$status))
+   IdV0S0%%Result2%%0 = job$V0S0$userstatus
+   IdV0S0%%Result1%%1 = job$V0S0$status
+   IdV0S0%%Name%%2 = jb$V0S0
+   rpt$V0S0 = DSMakeJobReport(h$V0S0, 1, "CRLF")
+   rpt$all := "\\n":rpt$V0S0 ;* accumulate job reports
+   dummy$ = DSDetachJob(h$V0S0)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S0$status <> DSJS.RUNOK And job$V0S0$status <> DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S0%%Result1%%1 = DSJS.RUNOK  Or IdV0S0%%Result1%%1 = DSJS.RUNWARN) Then GoTo L$V0S1$START
+L$V0S0$RETURN$2:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S1$START:
+*** Activity "Warehouse_02": Initialize job
+   jb$V0S1 = "Warehouse_02"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_02":@FM:jb$V0S1))
+   h$V0S1 = DSAttachJob(jb$V0S1, DSJ.ERRNONE)
+   If (Not(h$V0S1)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   h$V0S1 = DSPrepareJob(h$V0S1)
+   If (Not(h$V0S1)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+L$V0S1$PREPARED:
+   p$V0S1$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S1, "$APT_CONFIG_FILE", p$V0S1$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   p$V0S1$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S1, "$APT_DUMP_SCORE", p$V0S1$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S1, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S1:@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S1
+   id$list<-1> = "V0S1"
+   GoTo L$V0S0$RETURN$2
+**************************************************
+L$V0S1$FINISHED:
+   job$V0S1$status = DSGetJobInfo(h$V0S1, DSJ.JOBSTATUS)
+   job$V0S1$userstatus = DSGetJobInfo(h$V0S1, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_02":@FM:jb$V0S1:@FM:job$V0S1$status))
+   IdV0S1%%Result2%%3 = job$V0S1$userstatus
+   IdV0S1%%Result1%%4 = job$V0S1$status
+   IdV0S1%%Name%%5 = jb$V0S1
+   rpt$V0S1 = DSMakeJobReport(h$V0S1, 1, "CRLF")
+   rpt$all := "\\n":rpt$V0S1 ;* accumulate job reports
+   dummy$ = DSDetachJob(h$V0S1)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S1$status <> DSJS.RUNOK And job$V0S1$status <> DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S1%%Result1%%4 = DSJS.RUNOK  Or IdV0S1%%Result1%%4 = DSJS.RUNWARN) Then GoTo L$V0S2$START
+L$V0S1$RETURN$2:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S2$START:
+*** Activity "Warehouse_03": Initialize job
+   jb$V0S2 = "Warehouse_03"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_03":@FM:jb$V0S2))
+   h$V0S2 = DSAttachJob(jb$V0S2, DSJ.ERRNONE)
+   If (Not(h$V0S2)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   h$V0S2 = DSPrepareJob(h$V0S2)
+   If (Not(h$V0S2)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+L$V0S2$PREPARED:
+   p$V0S2$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S2, "$APT_CONFIG_FILE", p$V0S2$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   p$V0S2$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S2, "$APT_DUMP_SCORE", p$V0S2$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S2, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S2:@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S2
+   id$list<-1> = "V0S2"
+   GoTo L$V0S1$RETURN$2
+**************************************************
+L$V0S2$FINISHED:
+   job$V0S2$status = DSGetJobInfo(h$V0S2, DSJ.JOBSTATUS)
+   job$V0S2$userstatus = DSGetJobInfo(h$V0S2, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_03":@FM:jb$V0S2:@FM:job$V0S2$status))
+   IdV0S2%%Result2%%6 = job$V0S2$userstatus
+   IdV0S2%%Result1%%7 = job$V0S2$status
+   IdV0S2%%Name%%8 = jb$V0S2
+   rpt$V0S2 = DSMakeJobReport(h$V0S2, 1, "CRLF")
+   rpt$all := "\\n":rpt$V0S2 ;* accumulate job reports
+   dummy$ = DSDetachJob(h$V0S2)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S2$status <> DSJS.RUNOK And job$V0S2$status <> DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S2%%Result1%%7 = DSJS.RUNOK  Or IdV0S2%%Result1%%7 = DSJS.RUNWARN) Then GoTo L$V0S3$START
+L$V0S2$RETURN$2:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S3$START:
+*** Activity "Warehouse_04": Initialize job
+   jb$V0S3 = "Warehouse_04_Sequential"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_04":@FM:jb$V0S3))
+   h$V0S3 = DSAttachJob(jb$V0S3, DSJ.ERRNONE)
+   If (Not(h$V0S3)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   h$V0S3 = DSPrepareJob(h$V0S3)
+   If (Not(h$V0S3)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+L$V0S3$PREPARED:
+   p$V0S3$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S3, "$APT_CONFIG_FILE", p$V0S3$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$2 = ($ORACLE_SYS_ID)
+   err$code = DSSetParam(h$V0S3, "$ORACLE_SYS_ID", p$V0S3$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORACLE_SYS_ID":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$3 = ($ORA_SCHEMA)
+   err$code = DSSetParam(h$V0S3, "$ORA_SCHEMA", p$V0S3$3)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORA_SCHEMA":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$4 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S3, "$APT_DUMP_SCORE", p$V0S3$4)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$5 = (1)
+   err$code = DSSetParam(h$V0S3, "LoadNum", p$V0S3$5)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "LoadNum":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S3, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S3:@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S3
+   id$list<-1> = "V0S3"
+   GoTo L$V0S2$RETURN$2
+**************************************************
+L$V0S3$FINISHED:
+   job$V0S3$status = DSGetJobInfo(h$V0S3, DSJ.JOBSTATUS)
+   job$V0S3$userstatus = DSGetJobInfo(h$V0S3, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_04":@FM:jb$V0S3:@FM:job$V0S3$status))
+   IdV0S3%%Result2%%9 = job$V0S3$userstatus
+   IdV0S3%%Result1%%10 = job$V0S3$status
+   IdV0S3%%Name%%11 = jb$V0S3
+   rpt$V0S3 = DSMakeJobReport(h$V0S3, 1, "CRLF")
+   rpt$all := "\\n":rpt$V0S3 ;* accumulate job reports
+   dummy$ = DSDetachJob(h$V0S3)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S3$status <> DSJS.RUNOK And job$V0S3$status <> DSJS.RUNWARN) Then GoSub L$V1S0$START
+   GoTo L$WAITFORJOB
+**************************************************
+L$V1S0$START:
+*** Sequencer "Sequencer_9": wait until inputs ready
+   seq$V1S0$status = 1
+   If seq$V1S0$count > 0 Then Return
+   seq$V1S0$count += 1
+   seq$V1S0$status = 2
+   GoTo L$V1S5$START
+L$V1S0$RETURN$1:
+   Return
+**************************************************
+L$V1S5$START:
+*** Activity "NotifyError": Call routine
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0058\\%1 (ROUTINE %2) started", "NotifyError":@FM:"DSSendMail"))
+   rtn$ok = DSCheckRoutine("DSSendMail")
+   If (Not(rtn$ok)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0005\\BASIC routine is not cataloged: %1", "DSSendMail")
+      msg$id = "@NotifyError"; GoTo L$ERROR
+   End
+   p$V1S5$0 = "To:sdf\\nFrom:sdf\\nSubject:sdf\\nServer:sdfs\\nBody:A job failed in the sequence.\\n":rpt$all
+   Call 'DSSendMail'(r$V1S5, p$V1S5$0)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "NotifyError":@FM:r$V1S5))
+   GoTo L$V1S0$RETURN$1
+**************************************************
+L$WAITFORJOB:
+   If handle$list = "" Then GoTo L$FINISH
+   handle$ = DSWaitForJob(handle$list)
+   If handle$ = 0 Then handle$ = handle$list<1>
+   Locate handle$ In handle$list Setting index$ Then
+      id$ = id$list<index$>
+      Del id$list<index$>; Del handle$list<index$>
+      b$Abandoning = abort$list<index$>; Del abort$list<index$>
+      Begin Case
+      Case id$ = "V0S0"
+         GoTo L$V0S0$FINISHED
+      Case id$ = "V0S1"
+         GoTo L$V0S1$FINISHED
+      Case id$ = "V0S2"
+         GoTo L$V0S2$FINISHED
+      Case id$ = "V0S3"
+         GoTo L$V0S3$FINISHED
+      End Case
+   End
+* Error if fall though
+   handle$list = ""
+   msg$ = DSMakeMsg("DSTAGE_JSG_M_0008\\Error calling DSWaitForJob(), code=%1[E]", handle$)
+   msg$id = "@Coordinator"; GoTo L$ERROR
+**************************************************
+L$ERROR:
+   Call DSLogWarn(DSMakeMsg("DSTAGE_JSG_M_0009\\Controller problem: %1", msg$), msg$id)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0052\\Exception raised: %1", msg$id:", ":msg$))
+   abort$list = Ifs(handle$list, Str(1:@FM, DCount(handle$list, @FM)), "")
+   b$Abandoning = @True
+   GoTo L$WAITFORJOB
+L$ABORT:
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0056\\Sequence failed", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   Call DSLogFatal(DSMakeMsg("DSTAGE_JSG_M_0013\\Sequence job will abort due to previous unrecoverable errors", ""), "@Coordinator")
+**************************************************
+L$FINISH:
+   If b$Abandoning Then GoTo L$ABORT
+   If (seq$V1S0$status = 1) Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0072\\Note: Sequencer '%1' was entered, but never exited", "Sequencer_9"), "@Coordinator")
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0054\\Sequence finished OK", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   L$EXIT: Return To L$EXIT
+ 
+
+=+=+=+=
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Prompt "Report score"
+         Default "False"
+         HelpTxt "If set, the Parallel job will produce a report showing the operators, processes and data sets in a running application."
+         ParamType "5"
+         ListValues "False\(9)True"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Prompt "ORACLE_SYS_ID"
+         Default "ORA2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Prompt "ORA_SCHEMA"
+         Default "DEV2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Prompt "Configuration file"
+         Default "/home/dsadm/Ascential/DataStage/Configurations/default.apt"
+         HelpTxt "The Parallel job configuration file."
+         ParamType "4"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Prompt "FileData"
+         Default "031005"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      Dependencies "CJobDepend"
+      BEGIN DSSUBRECORD
+         Name "Warehouse_01"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_02"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_03"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_04_Sequential"
+         Type "0"
+      END DSSUBRECORD
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "2"
+      Category "seqjobs"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S1|V0S2|V0S3"
+      StageXPos "24|168|312|456"
+      StageYPos "144|144|144|144"
+      StageTypes "CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSJobActivity"
+      NextStageID "14"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48"
+      StageYSize "48|48|48|48"
+      ContainerViewSizing "0066 0087 0670 0519 0000 0001 0000 0000"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_01"
+      NextID "3"
+      OutputPins "V0S0P1"
+      ExecutionType "1"
+      Jobname "Warehouse_01"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Description "FileDate"
+         ValueType "4"
+         DisplayValue "FileDate"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S1"
+      ConditionType "6"
+      TriggerExpression "Warehouse_01.$JobStatus = DSJS.RUNOK  Or Warehouse_01.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "82"
+      TopTextPos "168"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_02"
+      NextID "4"
+      InputPins "V0S1P1"
+      OutputPins "V0S1P2"
+      ExecutionType "1"
+      Jobname "Warehouse_02"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S2"
+      ConditionType "6"
+      TriggerExpression "Warehouse_02.$JobStatus = DSJS.RUNOK  Or Warehouse_02.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "230"
+      TopTextPos "167"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_03"
+      NextID "4"
+      InputPins "V0S2P1"
+      OutputPins "V0S2P2"
+      ExecutionType "1"
+      Jobname "Warehouse_03"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S3"
+      ConditionType "6"
+      TriggerExpression "Warehouse_03.$JobStatus = DSJS.RUNOK  Or Warehouse_03.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "367"
+      TopTextPos "168"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_04"
+      NextID "4"
+      InputPins "V0S3P1"
+      ExecutionType "1"
+      Jobname "Warehouse_04_Sequential"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Description "$ORACLE_SYS_ID"
+         ValueType "4"
+         DisplayValue "$ORACLE_SYS_ID"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Description "$ORA_SCHEMA"
+         ValueType "4"
+         DisplayValue "$ORA_SCHEMA"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "LoadNum"
+         Description "1"
+         ValueType "4"
+         DisplayValue "1"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+END DSJOB
+BEGIN DSJOB
+   Identifier "seq_Warehouse_02"
+   DateModified "2005-08-10"
+   TimeModified "10.07.02"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "seq_Warehouse_02"
+      NextID "4"
+      Container "V0"
+      JobVersion "50.0.0"
+      JobControlCode =+=+=+=
+* Tokens were replaced below as follows:
+* IdV0S0%%Result2%%0 <= Warehouse_01.$UserStatus
+* IdV0S0%%Result1%%1 <= Warehouse_01.$JobStatus
+* IdV0S0%%Name%%2 <= Warehouse_01.$JobName
+* IdV0S1%%Result2%%3 <= Warehouse_02.$UserStatus
+* IdV0S1%%Result1%%4 <= Warehouse_02.$JobStatus
+* IdV0S1%%Name%%5 <= Warehouse_02.$JobName
+* IdV0S2%%Result2%%6 <= Warehouse_03.$UserStatus
+* IdV0S2%%Result1%%7 <= Warehouse_03.$JobStatus
+* IdV0S2%%Name%%8 <= Warehouse_03.$JobName
+* IdV0S3%%Result2%%9 <= Warehouse_04.$UserStatus
+* IdV0S3%%Result1%%10 <= Warehouse_04.$JobStatus
+* IdV0S3%%Name%%11 <= Warehouse_04.$JobName
+* IdV3S0%%Result1%%12 <= Command_Warnings.$ReturnValue
+* IdV3S0%%Name%%13 <= Command_Warnings.$CommandName
+* IdV3S0%%Result2%%14 <= Command_Warnings.$CommandOutput
+*
+*** [Generated at 2005-07-21 14:17:32 - 7.5.0.25]
+   $INCLUDE DSINCLUDE DSJ_XFUNCS.H
+   EQU Time$$ Lit "Oconv(Time(), 'MTS:'):': '"
+****************************************
+* Graphical Sequencer generated code for Job seq_Warehouse_02
+****************************************
+   
+   seq$V1S0$count = 0
+   seq$V1S0$status = 0
+   handle$list = ""
+   id$list = ""
+   abort$list = ""
+   b$Abandoning = @False
+   summary$restarting = @False
+*** Sequence start point
+   summary$ = DSMakeMsg("DSTAGE_JSG_M_0048\\Summary of sequence run", "")
+   If summary$restarting Then
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0049\\Sequence restarted after failure", ""))
+   End Else
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0051\\Sequence started", ""))
+   End
+   GoTo L$V0S0$START
+L$RETURN$1:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S0$START:
+*** Activity "Warehouse_01": Initialize job
+   jb$V0S0 = "Warehouse_01"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_01":@FM:jb$V0S0))
+   h$V0S0 = DSAttachJob(jb$V0S0, DSJ.ERRNONE)
+   If (Not(h$V0S0)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   h$V0S0 = DSPrepareJob(h$V0S0)
+   If (Not(h$V0S0)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+L$V0S0$PREPARED:
+   p$V0S0$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S0, "$APT_CONFIG_FILE", p$V0S0$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S0, "$APT_DUMP_SCORE", p$V0S0$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$3 = (FileDate)
+   err$code = DSSetParam(h$V0S0, "FileDate", p$V0S0$3)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "FileDate":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S0, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S0:@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S0
+   id$list<-1> = "V0S0"
+   GoTo L$RETURN$1
+**************************************************
+L$V0S0$FINISHED:
+   job$V0S0$status = DSGetJobInfo(h$V0S0, DSJ.JOBSTATUS)
+   job$V0S0$userstatus = DSGetJobInfo(h$V0S0, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_01":@FM:jb$V0S0:@FM:job$V0S0$status))
+   IdV0S0%%Result2%%0 = job$V0S0$userstatus
+   IdV0S0%%Result1%%1 = job$V0S0$status
+   IdV0S0%%Name%%2 = jb$V0S0
+   rpt$V0S0 = DSMakeJobReport(h$V0S0, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S0)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S0$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S0%%Result1%%1 = DSJS.RUNOK  Or IdV0S0%%Result1%%1 = DSJS.RUNWARN) Then GoTo L$V0S1$START
+L$V0S0$RETURN$2:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S1$START:
+*** Activity "Warehouse_02": Initialize job
+   jb$V0S1 = "Warehouse_02"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_02":@FM:jb$V0S1))
+   h$V0S1 = DSAttachJob(jb$V0S1, DSJ.ERRNONE)
+   If (Not(h$V0S1)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   h$V0S1 = DSPrepareJob(h$V0S1)
+   If (Not(h$V0S1)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+L$V0S1$PREPARED:
+   p$V0S1$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S1, "$APT_CONFIG_FILE", p$V0S1$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   p$V0S1$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S1, "$APT_DUMP_SCORE", p$V0S1$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S1, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S1:@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S1
+   id$list<-1> = "V0S1"
+   GoTo L$V0S0$RETURN$2
+**************************************************
+L$V0S1$FINISHED:
+   job$V0S1$status = DSGetJobInfo(h$V0S1, DSJ.JOBSTATUS)
+   job$V0S1$userstatus = DSGetJobInfo(h$V0S1, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_02":@FM:jb$V0S1:@FM:job$V0S1$status))
+   IdV0S1%%Result2%%3 = job$V0S1$userstatus
+   IdV0S1%%Result1%%4 = job$V0S1$status
+   IdV0S1%%Name%%5 = jb$V0S1
+   rpt$V0S1 = DSMakeJobReport(h$V0S1, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S1)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S1$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S1%%Result1%%4 = DSJS.RUNOK  Or IdV0S1%%Result1%%4 = DSJS.RUNWARN) Then GoTo L$V0S2$START
+L$V0S1$RETURN$2:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S2$START:
+*** Activity "Warehouse_03": Initialize job
+   jb$V0S2 = "Warehouse_03"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_03":@FM:jb$V0S2))
+   h$V0S2 = DSAttachJob(jb$V0S2, DSJ.ERRNONE)
+   If (Not(h$V0S2)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   h$V0S2 = DSPrepareJob(h$V0S2)
+   If (Not(h$V0S2)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+L$V0S2$PREPARED:
+   p$V0S2$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S2, "$APT_CONFIG_FILE", p$V0S2$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   p$V0S2$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S2, "$APT_DUMP_SCORE", p$V0S2$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S2, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S2:@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S2
+   id$list<-1> = "V0S2"
+   GoTo L$V0S1$RETURN$2
+**************************************************
+L$V0S2$FINISHED:
+   job$V0S2$status = DSGetJobInfo(h$V0S2, DSJ.JOBSTATUS)
+   job$V0S2$userstatus = DSGetJobInfo(h$V0S2, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_03":@FM:jb$V0S2:@FM:job$V0S2$status))
+   IdV0S2%%Result2%%6 = job$V0S2$userstatus
+   IdV0S2%%Result1%%7 = job$V0S2$status
+   IdV0S2%%Name%%8 = jb$V0S2
+   rpt$V0S2 = DSMakeJobReport(h$V0S2, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S2)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S2$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S2%%Result1%%7 = DSJS.RUNOK  Or IdV0S2%%Result1%%7 = DSJS.RUNWARN) Then GoTo L$V0S3$START
+L$V0S2$RETURN$2:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S3$START:
+*** Activity "Warehouse_04": Initialize job
+   jb$V0S3 = "Warehouse_04_Sequential"
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_04":@FM:jb$V0S3))
+   h$V0S3 = DSAttachJob(jb$V0S3, DSJ.ERRNONE)
+   If (Not(h$V0S3)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   h$V0S3 = DSPrepareJob(h$V0S3)
+   If (Not(h$V0S3)) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+L$V0S3$PREPARED:
+   p$V0S3$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S3, "$APT_CONFIG_FILE", p$V0S3$1)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$2 = ($ORACLE_SYS_ID)
+   err$code = DSSetParam(h$V0S3, "$ORACLE_SYS_ID", p$V0S3$2)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORACLE_SYS_ID":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$3 = ($ORA_SCHEMA)
+   err$code = DSSetParam(h$V0S3, "$ORA_SCHEMA", p$V0S3$3)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORA_SCHEMA":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$4 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S3, "$APT_DUMP_SCORE", p$V0S3$4)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$5 = (1)
+   err$code = DSSetParam(h$V0S3, "LoadNum", p$V0S3$5)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "LoadNum":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S3, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S3:@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S3
+   id$list<-1> = "V0S3"
+   GoTo L$V0S2$RETURN$2
+**************************************************
+L$V0S3$FINISHED:
+   job$V0S3$status = DSGetJobInfo(h$V0S3, DSJ.JOBSTATUS)
+   job$V0S3$userstatus = DSGetJobInfo(h$V0S3, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_04":@FM:jb$V0S3:@FM:job$V0S3$status))
+   IdV0S3%%Result2%%9 = job$V0S3$userstatus
+   IdV0S3%%Result1%%10 = job$V0S3$status
+   IdV0S3%%Name%%11 = jb$V0S3
+   rpt$V0S3 = DSMakeJobReport(h$V0S3, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S3)
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S3$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   GoTo L$WAITFORJOB
+**************************************************
+L$V1S0$START:
+*** Sequencer "Sequencer_9": wait until inputs ready
+   seq$V1S0$status = 1
+   If seq$V1S0$count > 0 Then Return
+   seq$V1S0$count += 1
+   seq$V1S0$status = 2
+   GoTo L$V3S0$START
+L$V1S0$RETURN$1:
+   Return
+**************************************************
+L$V3S0$START:
+*** Activity "Command_Warnings": Execute command
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0059\\%1 (COMMAND %2) started", "Command_Warnings":@FM:"home/dsadm/ds324Files/Echo_Script.sh"))
+   p$V3S0$1 = (IdV0S0%%Name%%2:"=":IdV0S0%%Result1%%1:"    ":IdV0S1%%Name%%5:"=":IdV0S1%%Result1%%4:"    ":IdV0S2%%Name%%8:"=":IdV0S2%%Result1%%7:"     ":IdV0S3%%Name%%11:"=":IdV0S3%%Result2%%9:" ")
+   x$cmd = "home/dsadm/ds324Files/Echo_Script.sh":" ":p$V3S0$1
+   x$type = (If System(91) = 1 Then "NT" Else "UNIX")
+   Call DSExecute(x$type, x$cmd, x$V3S0$output, x$V3S0)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0007\\Executed: %1<L>Reply=%2<L>Output from command ====><L>%3", x$cmd:@FM:x$V3S0:@FM:Lower(x$V3S0$output)), "@Command_Warnings")
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "Command_Warnings":@FM:x$V3S0))
+   IdV3S0%%Result1%%12 = x$V3S0
+   IdV3S0%%Name%%13 = "home/dsadm/ds324Files/Echo_Script.sh"
+   IdV3S0%%Result2%%14 = x$V3S0$output
+   GoTo L$V1S0$RETURN$1
+**************************************************
+L$WAITFORJOB:
+   If handle$list = "" Then GoTo L$FINISH
+   handle$ = DSWaitForJob(handle$list)
+   If handle$ = 0 Then handle$ = handle$list<1>
+   Locate handle$ In handle$list Setting index$ Then
+      id$ = id$list<index$>
+      Del id$list<index$>; Del handle$list<index$>
+      b$Abandoning = abort$list<index$>; Del abort$list<index$>
+      Begin Case
+      Case id$ = "V0S0"
+         GoTo L$V0S0$FINISHED
+      Case id$ = "V0S1"
+         GoTo L$V0S1$FINISHED
+      Case id$ = "V0S2"
+         GoTo L$V0S2$FINISHED
+      Case id$ = "V0S3"
+         GoTo L$V0S3$FINISHED
+      End Case
+   End
+* Error if fall though
+   handle$list = ""
+   msg$ = DSMakeMsg("DSTAGE_JSG_M_0008\\Error calling DSWaitForJob(), code=%1[E]", handle$)
+   msg$id = "@Coordinator"; GoTo L$ERROR
+**************************************************
+L$ERROR:
+   Call DSLogWarn(DSMakeMsg("DSTAGE_JSG_M_0009\\Controller problem: %1", msg$), msg$id)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0052\\Exception raised: %1", msg$id:", ":msg$))
+   abort$list = Ifs(handle$list, Str(1:@FM, DCount(handle$list, @FM)), "")
+   b$Abandoning = @True
+   GoTo L$WAITFORJOB
+L$ABORT:
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0056\\Sequence failed", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   Call DSLogFatal(DSMakeMsg("DSTAGE_JSG_M_0013\\Sequence job will abort due to previous unrecoverable errors", ""), "@Coordinator")
+**************************************************
+L$FINISH:
+   If b$Abandoning Then GoTo L$ABORT
+   If (seq$V1S0$status = 1) Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0072\\Note: Sequencer '%1' was entered, but never exited", "Sequencer_9"), "@Coordinator")
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0054\\Sequence finished OK", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   L$EXIT: Return To L$EXIT
+ 
+
+=+=+=+=
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Prompt "Report score"
+         Default "False"
+         HelpTxt "If set, the Parallel job will produce a report showing the operators, processes and data sets in a running application."
+         ParamType "5"
+         ListValues "False\(9)True"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Prompt "ORACLE_SYS_ID"
+         Default "ORA2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Prompt "ORA_SCHEMA"
+         Default "DEV2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Prompt "Configuration file"
+         Default "/home/dsadm/Ascential/DataStage/Configurations/default.apt"
+         HelpTxt "The Parallel job configuration file."
+         ParamType "4"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Prompt "FileData"
+         Default "031005"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      Dependencies "CJobDepend"
+      BEGIN DSSUBRECORD
+         Name "Warehouse_01"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_02"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_03"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_04_Sequential"
+         Type "0"
+      END DSSUBRECORD
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "2"
+      Category "seqjobs"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S1|V0S2|V0S3|V1S0|V3S0"
+      StageXPos "24|168|312|456|408|672"
+      StageYPos "144|144|144|144|336|336"
+      StageTypes "CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSSequencer|CJSExecCmdActivity"
+      NextStageID "10"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48|48|48"
+      StageYSize "48|48|48|48|48|48"
+      ContainerViewSizing "0066 0087 0670 0519 0000 0001 0000 0000"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_01"
+      NextID "3"
+      OutputPins "V0S0P1|V0S0P2"
+      ExecutionType "1"
+      Jobname "Warehouse_01"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Description "FileDate"
+         ValueType "4"
+         DisplayValue "FileDate"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S1"
+      ConditionType "6"
+      TriggerExpression "Warehouse_01.$JobStatus = DSJS.RUNOK  Or Warehouse_01.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "82"
+      TopTextPos "168"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "173"
+      TopTextPos "247"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_02"
+      NextID "4"
+      InputPins "V0S1P1"
+      OutputPins "V0S1P2|V0S1P3"
+      ExecutionType "1"
+      Jobname "Warehouse_02"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S2"
+      ConditionType "6"
+      TriggerExpression "Warehouse_02.$JobStatus = DSJS.RUNOK  Or Warehouse_02.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "230"
+      TopTextPos "167"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "297"
+      TopTextPos "256"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_03"
+      NextID "4"
+      InputPins "V0S2P1"
+      OutputPins "V0S2P2|V0S2P3"
+      ExecutionType "1"
+      Jobname "Warehouse_03"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S3"
+      ConditionType "6"
+      TriggerExpression "Warehouse_03.$JobStatus = DSJS.RUNOK  Or Warehouse_03.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "367"
+      TopTextPos "168"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "352"
+      TopTextPos "230"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_04"
+      NextID "4"
+      InputPins "V0S3P1"
+      OutputPins "V0S3P2"
+      ExecutionType "1"
+      Jobname "Warehouse_04_Sequential"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Description "$ORACLE_SYS_ID"
+         ValueType "4"
+         DisplayValue "$ORACLE_SYS_ID"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Description "$ORA_SCHEMA"
+         ValueType "4"
+         DisplayValue "$ORA_SCHEMA"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "LoadNum"
+         Description "1"
+         ValueType "4"
+         DisplayValue "1"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_04_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "477"
+      TopTextPos "246"
+      SourceID "V0S3"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSSequencer"
+      Readonly "0"
+      Name "Sequencer_9"
+      NextID "7"
+      InputPins "V1S0P1|V1S0P2|V1S0P3|V1S0P4"
+      OutputPins "V1S0P6"
+      SequencerType "1"
+      StageType "CSequencer"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01_warnings"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02_warnings"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03_warnings"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P4"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_04_warnings"
+      Partner "V0S3"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P6"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warnings"
+      Partner "V3S0"
+      ConditionType "0"
+      LeftTextPos "563"
+      TopTextPos "351"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V3S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSExecCmdActivity"
+      Readonly "0"
+      Name "Command_Warnings"
+      NextID "2"
+      InputPins "V3S0P1"
+      Path "home/dsadm/ds324Files/Echo_Script.sh"
+      Parameters "#Warehouse_01.$JobName#=#Warehouse_01.$JobStatus#    #Warehouse_02.$JobName#=#Warehouse_02.$JobStatus#    #Warehouse_03.$JobName#=#Warehouse_03.$JobStatus#     #Warehouse_04.$JobName#=#Warehouse_04.$UserStatus# "
+      CheckPoint "0"
+      StageType "CExecCommandActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V3S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warnings"
+      Partner "V1S0"
+      LinkType "1"
+   END DSRECORD
+END DSJOB
+BEGIN DSJOB
+   Identifier "seq_Warehouse_03"
+   DateModified "2005-08-10"
+   TimeModified "10.07.02"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "seq_Warehouse_03"
+      NextID "5"
+      Container "V0"
+      JobVersion "50.0.0"
+      JobControlCode =+=+=+=
+* Tokens were replaced below as follows:
+* IdV0S0%%Result2%%0 <= Warehouse_01.$UserStatus
+* IdV0S0%%Result1%%1 <= Warehouse_01.$JobStatus
+* IdV0S0%%Name%%2 <= Warehouse_01.$JobName
+* IdV0S1%%Result2%%3 <= Warehouse_02.$UserStatus
+* IdV0S1%%Result1%%4 <= Warehouse_02.$JobStatus
+* IdV0S1%%Name%%5 <= Warehouse_02.$JobName
+* IdV0S2%%Result2%%6 <= Warehouse_03.$UserStatus
+* IdV0S2%%Result1%%7 <= Warehouse_03.$JobStatus
+* IdV0S2%%Name%%8 <= Warehouse_03.$JobName
+* IdV0S3%%Result2%%9 <= Warehouse_04.$UserStatus
+* IdV0S3%%Result1%%10 <= Warehouse_04.$JobStatus
+* IdV0S3%%Name%%11 <= Warehouse_04.$JobName
+* IdV3S0%%Result1%%12 <= Command_Warnings.$ReturnValue
+* IdV3S0%%Name%%13 <= Command_Warnings.$CommandName
+* IdV3S0%%Result2%%14 <= Command_Warnings.$CommandOutput
+* IdV0S10%%Result1%%15 <= Wait_For_File.$ReturnValue
+*
+*** [Generated at 2005-07-21 15:04:10 - 7.5.0.25]
+   $INCLUDE DSINCLUDE DSJ_XFUNCS.H
+   EQU Time$$ Lit "Oconv(Time(), 'MTS:'):': '"
+****************************************
+* Graphical Sequencer generated code for Job seq_Warehouse_03
+****************************************
+   
+   seq$V1S0$count = 0
+   seq$V1S0$status = 0
+   handle$list = ""
+   id$list = ""
+   abort$list = ""
+   b$Abandoning = @False
+   b$CPRestarted = @False
+   b$InErrorRef = @False
+   summary$restarting = @False
+*** Create new checkpoint for sequence if not restarting
+   If DSCheckPointExists(DSJ.ME, cp$dtm) Then GoTo L$RESTART
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0015\\Starting new run of checkpointed Sequence job", ""), "@Coordinator")
+   If (Not(DSCheckPointValidate(DSJ.ME, cp$msg))) Then
+      err$source = "@Coordinator"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0016\\Error creating checkpoint record<L>%1", cp$msg)
+      msg$id = "@Coordinator"; GoTo L$ERROR
+   End
+   GoTo L$MAINSTART
+L$RESTART:
+*** Validate restarted job matches prior state
+   summary$restarting = @True
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0017\\Sequence job is being restarted after failure<L>Checkpoint record last modified at %1", cp$dtm), "@Coordinator")
+   b$CPRestarted = @True
+   If Not(DSCheckPointValidate(DSJ.ME, cp$msg)) Then
+      Call DSLogWarn(cp$msg, "@Coordinator")
+   End
+L$MAINSTART:
+*** Sequence start point
+   summary$ = DSMakeMsg("DSTAGE_JSG_M_0048\\Summary of sequence run", "")
+   If summary$restarting Then
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0049\\Sequence restarted after failure", ""))
+   End Else
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0050\\Sequence started (checkpointing on)", ""))
+   End
+   GoTo L$V0S10$START
+L$RETURN$1:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S0$START:
+*** Activity "Warehouse_01": Initialize job
+   b$InErrorRef$V0S0 = b$InErrorRef
+   jb$V0S0 = "Warehouse_01"
+   b$V0S0skipping = @False
+   h$V0S0$cp = "h$V0S0"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S0$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S0), "@Warehouse_01")
+      job$V0S0$status = Raise(cp$value<1>)
+      job$V0S0$userstatus = Raise(cp$value<2>)
+      IdV0S0%%Result2%%0 = job$V0S0$userstatus
+      IdV0S0%%Result1%%1 = job$V0S0$status
+      IdV0S0%%Name%%2 = jb$V0S0
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_01":@FM:jb$V0S0))
+      b$V0S0skipping = @True
+      Goto L$V0S0$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_01":@FM:jb$V0S0))
+   h$V0S0 = DSAttachJob(jb$V0S0, DSJ.ERRNONE)
+   If (Not(h$V0S0)) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   h$V0S0 = DSPrepareJob(h$V0S0)
+   If (Not(h$V0S0)) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+L$V0S0$PREPARED:
+   p$V0S0$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S0, "$APT_CONFIG_FILE", p$V0S0$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S0, "$APT_DUMP_SCORE", p$V0S0$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$3 = (FileDate)
+   err$code = DSSetParam(h$V0S0, "FileDate", p$V0S0$3)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "FileDate":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S0, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S0:@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S0
+   id$list<-1> = "V0S0"
+   GoTo L$V0S10$RETURN$1
+**************************************************
+L$V0S0$FINISHED:
+   job$V0S0$status = DSGetJobInfo(h$V0S0, DSJ.JOBSTATUS)
+   job$V0S0$userstatus = DSGetJobInfo(h$V0S0, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_01":@FM:jb$V0S0:@FM:job$V0S0$status))
+   IdV0S0%%Result2%%0 = job$V0S0$userstatus
+   IdV0S0%%Result1%%1 = job$V0S0$status
+   IdV0S0%%Name%%2 = jb$V0S0
+   rpt$V0S0 = DSMakeJobReport(h$V0S0, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S0)
+   If (job$V0S0$status <> DSJS.RUNOK And job$V0S0$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_01"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S0)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S0 Or (job$V0S0$status <> DSJS.RUNOK And job$V0S0$status <> DSJS.RUNWARN) Then Goto L$V0S0$SKIPPED
+   cp$value = Lower(job$V0S0$status)
+   cp$value<2> = Lower(job$V0S0$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S0$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S0), "@Warehouse_01")
+**************************************************
+L$V0S0$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S0$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S0%%Result1%%1 = DSJS.RUNOK  Or IdV0S0%%Result1%%1 = DSJS.RUNWARN) Then GoTo L$V0S1$START
+L$V0S0$RETURN$2:
+   If b$V0S0skipping Then GoTo L$V0S10$RETURN$1
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S1$START:
+*** Activity "Warehouse_02": Initialize job
+   b$InErrorRef$V0S1 = b$InErrorRef
+   jb$V0S1 = "Warehouse_02"
+   b$V0S1skipping = @False
+   h$V0S1$cp = "h$V0S1"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S1$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S1), "@Warehouse_02")
+      job$V0S1$status = Raise(cp$value<1>)
+      job$V0S1$userstatus = Raise(cp$value<2>)
+      IdV0S1%%Result2%%3 = job$V0S1$userstatus
+      IdV0S1%%Result1%%4 = job$V0S1$status
+      IdV0S1%%Name%%5 = jb$V0S1
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_02":@FM:jb$V0S1))
+      b$V0S1skipping = @True
+      Goto L$V0S1$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_02":@FM:jb$V0S1))
+   h$V0S1 = DSAttachJob(jb$V0S1, DSJ.ERRNONE)
+   If (Not(h$V0S1)) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   h$V0S1 = DSPrepareJob(h$V0S1)
+   If (Not(h$V0S1)) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+L$V0S1$PREPARED:
+   p$V0S1$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S1, "$APT_CONFIG_FILE", p$V0S1$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   p$V0S1$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S1, "$APT_DUMP_SCORE", p$V0S1$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S1, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S1:@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S1
+   id$list<-1> = "V0S1"
+   GoTo L$V0S0$RETURN$2
+**************************************************
+L$V0S1$FINISHED:
+   job$V0S1$status = DSGetJobInfo(h$V0S1, DSJ.JOBSTATUS)
+   job$V0S1$userstatus = DSGetJobInfo(h$V0S1, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_02":@FM:jb$V0S1:@FM:job$V0S1$status))
+   IdV0S1%%Result2%%3 = job$V0S1$userstatus
+   IdV0S1%%Result1%%4 = job$V0S1$status
+   IdV0S1%%Name%%5 = jb$V0S1
+   rpt$V0S1 = DSMakeJobReport(h$V0S1, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S1)
+   If (job$V0S1$status <> DSJS.RUNOK And job$V0S1$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_02"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S1)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S1 Or (job$V0S1$status <> DSJS.RUNOK And job$V0S1$status <> DSJS.RUNWARN) Then Goto L$V0S1$SKIPPED
+   cp$value = Lower(job$V0S1$status)
+   cp$value<2> = Lower(job$V0S1$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S1$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S1), "@Warehouse_02")
+**************************************************
+L$V0S1$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S1$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S1%%Result1%%4 = DSJS.RUNOK  Or IdV0S1%%Result1%%4 = DSJS.RUNWARN) Then GoTo L$V0S2$START
+L$V0S1$RETURN$2:
+   If b$V0S1skipping Then GoTo L$V0S0$RETURN$2
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S2$START:
+*** Activity "Warehouse_03": Initialize job
+   b$InErrorRef$V0S2 = b$InErrorRef
+   jb$V0S2 = "Warehouse_03"
+   b$V0S2skipping = @False
+   h$V0S2$cp = "h$V0S2"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S2$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S2), "@Warehouse_03")
+      job$V0S2$status = Raise(cp$value<1>)
+      job$V0S2$userstatus = Raise(cp$value<2>)
+      IdV0S2%%Result2%%6 = job$V0S2$userstatus
+      IdV0S2%%Result1%%7 = job$V0S2$status
+      IdV0S2%%Name%%8 = jb$V0S2
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_03":@FM:jb$V0S2))
+      b$V0S2skipping = @True
+      Goto L$V0S2$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_03":@FM:jb$V0S2))
+   h$V0S2 = DSAttachJob(jb$V0S2, DSJ.ERRNONE)
+   If (Not(h$V0S2)) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   h$V0S2 = DSPrepareJob(h$V0S2)
+   If (Not(h$V0S2)) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+L$V0S2$PREPARED:
+   p$V0S2$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S2, "$APT_CONFIG_FILE", p$V0S2$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   p$V0S2$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S2, "$APT_DUMP_SCORE", p$V0S2$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S2, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S2:@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S2
+   id$list<-1> = "V0S2"
+   GoTo L$V0S1$RETURN$2
+**************************************************
+L$V0S2$FINISHED:
+   job$V0S2$status = DSGetJobInfo(h$V0S2, DSJ.JOBSTATUS)
+   job$V0S2$userstatus = DSGetJobInfo(h$V0S2, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_03":@FM:jb$V0S2:@FM:job$V0S2$status))
+   IdV0S2%%Result2%%6 = job$V0S2$userstatus
+   IdV0S2%%Result1%%7 = job$V0S2$status
+   IdV0S2%%Name%%8 = jb$V0S2
+   rpt$V0S2 = DSMakeJobReport(h$V0S2, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S2)
+   If (job$V0S2$status <> DSJS.RUNOK And job$V0S2$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_03"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S2)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S2 Or (job$V0S2$status <> DSJS.RUNOK And job$V0S2$status <> DSJS.RUNWARN) Then Goto L$V0S2$SKIPPED
+   cp$value = Lower(job$V0S2$status)
+   cp$value<2> = Lower(job$V0S2$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S2$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S2), "@Warehouse_03")
+**************************************************
+L$V0S2$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S2$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S2%%Result1%%7 = DSJS.RUNOK  Or IdV0S2%%Result1%%7 = DSJS.RUNWARN) Then GoTo L$V0S3$START
+L$V0S2$RETURN$2:
+   If b$V0S2skipping Then GoTo L$V0S1$RETURN$2
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S3$START:
+*** Activity "Warehouse_04": Initialize job
+   b$InErrorRef$V0S3 = b$InErrorRef
+   jb$V0S3 = "Warehouse_04_Sequential"
+   b$V0S3skipping = @False
+   h$V0S3$cp = "h$V0S3"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S3$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S3), "@Warehouse_04")
+      job$V0S3$status = Raise(cp$value<1>)
+      job$V0S3$userstatus = Raise(cp$value<2>)
+      IdV0S3%%Result2%%9 = job$V0S3$userstatus
+      IdV0S3%%Result1%%10 = job$V0S3$status
+      IdV0S3%%Name%%11 = jb$V0S3
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_04":@FM:jb$V0S3))
+      b$V0S3skipping = @True
+      Goto L$V0S3$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_04":@FM:jb$V0S3))
+   h$V0S3 = DSAttachJob(jb$V0S3, DSJ.ERRNONE)
+   If (Not(h$V0S3)) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   h$V0S3 = DSPrepareJob(h$V0S3)
+   If (Not(h$V0S3)) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+L$V0S3$PREPARED:
+   p$V0S3$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S3, "$APT_CONFIG_FILE", p$V0S3$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$2 = ($ORACLE_SYS_ID)
+   err$code = DSSetParam(h$V0S3, "$ORACLE_SYS_ID", p$V0S3$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORACLE_SYS_ID":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$3 = ($ORA_SCHEMA)
+   err$code = DSSetParam(h$V0S3, "$ORA_SCHEMA", p$V0S3$3)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORA_SCHEMA":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$4 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S3, "$APT_DUMP_SCORE", p$V0S3$4)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$5 = (1)
+   err$code = DSSetParam(h$V0S3, "LoadNum", p$V0S3$5)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "LoadNum":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S3, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S3:@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S3
+   id$list<-1> = "V0S3"
+   GoTo L$V0S2$RETURN$2
+**************************************************
+L$V0S3$FINISHED:
+   job$V0S3$status = DSGetJobInfo(h$V0S3, DSJ.JOBSTATUS)
+   job$V0S3$userstatus = DSGetJobInfo(h$V0S3, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_04":@FM:jb$V0S3:@FM:job$V0S3$status))
+   IdV0S3%%Result2%%9 = job$V0S3$userstatus
+   IdV0S3%%Result1%%10 = job$V0S3$status
+   IdV0S3%%Name%%11 = jb$V0S3
+   rpt$V0S3 = DSMakeJobReport(h$V0S3, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S3)
+   If (job$V0S3$status <> DSJS.RUNOK And job$V0S3$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_04"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S3)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S3 Or (job$V0S3$status <> DSJS.RUNOK And job$V0S3$status <> DSJS.RUNWARN) Then Goto L$V0S3$SKIPPED
+   cp$value = Lower(job$V0S3$status)
+   cp$value<2> = Lower(job$V0S3$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S3$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S3), "@Warehouse_04")
+**************************************************
+L$V0S3$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S3$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If b$V0S3skipping Then GoTo L$V0S2$RETURN$2
+   GoTo L$WAITFORJOB
+**************************************************
+L$V1S0$START:
+*** Sequencer "Sequencer_9": wait until inputs ready
+   seq$V1S0$status = 1
+   If seq$V1S0$count > 0 Then Return
+   seq$V1S0$count += 1
+   seq$V1S0$status = 2
+   GoTo L$V3S0$START
+L$V1S0$RETURN$1:
+   Return
+**************************************************
+L$V3S0$START:
+*** Activity "Command_Warnings": Execute command
+   x$V3S0$cp = "x$V3S0"
+   If DSCheckPointGetValue(DSJ.ME, x$V3S0$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0023\\Skipped execution of command '%1' on restart", "home/dsadm/ds324Files/Echo_Script.sh"), "@Command_Warnings")
+      x$V3S0 = Raise(cp$value<1>)
+      x$V3S0$output = Raise(cp$value<2>)
+      IdV3S0%%Result1%%12 = x$V3S0
+      IdV3S0%%Name%%13 = "home/dsadm/ds324Files/Echo_Script.sh"
+      IdV3S0%%Result2%%14 = x$V3S0$output
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0062\\%1 (COMMAND %2) skipped", "Command_Warnings":@FM:"home/dsadm/ds324Files/Echo_Script.sh"))
+      Goto L$V3S0$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0059\\%1 (COMMAND %2) started", "Command_Warnings":@FM:"home/dsadm/ds324Files/Echo_Script.sh"))
+   p$V3S0$1 = (IdV0S0%%Name%%2:"=":IdV0S0%%Result1%%1:"    ":IdV0S1%%Name%%5:"=":IdV0S1%%Result1%%4:"    ":IdV0S2%%Name%%8:"=":IdV0S2%%Result1%%7:"     ":IdV0S3%%Name%%11:"=":IdV0S3%%Result2%%9:" ")
+   x$cmd = "home/dsadm/ds324Files/Echo_Script.sh":" ":p$V3S0$1
+   x$type = (If System(91) = 1 Then "NT" Else "UNIX")
+   Call DSExecute(x$type, x$cmd, x$V3S0$output, x$V3S0)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0007\\Executed: %1<L>Reply=%2<L>Output from command ====><L>%3", x$cmd:@FM:x$V3S0:@FM:Lower(x$V3S0$output)), "@Command_Warnings")
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "Command_Warnings":@FM:x$V3S0))
+   IdV3S0%%Result1%%12 = x$V3S0
+   IdV3S0%%Name%%13 = "home/dsadm/ds324Files/Echo_Script.sh"
+   IdV3S0%%Result2%%14 = x$V3S0$output
+   If (x$V3S0 <> 0) Then
+      err$source = "Command_Warnings"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0044\\Unhandled failure (%1) encountered executing command %2", x$V3S0:@FM:"home/dsadm/ds324Files/Echo_Script.sh")
+      msg$id = "@Command_Warnings"; GoTo L$ERROR
+   End
+   If b$InErrorRef Or (x$V3S0 <> 0) Then Goto L$V3S0$SKIPPED
+   cp$value = Lower(x$V3S0)
+   cp$value<2> = Lower(x$V3S0$output)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, x$V3S0$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0027\\Checkpointed execution of command '%1'", "home/dsadm/ds324Files/Echo_Script.sh"), "@Command_Warnings")
+**************************************************
+L$V3S0$SKIPPED:
+   GoTo L$V1S0$RETURN$1
+**************************************************
+L$V0S10$START:
+*** Activity "Wait_For_File": Call routine
+   r$V0S10$cp = "r$V0S10"
+   If DSCheckPointGetValue(DSJ.ME, r$V0S10$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0022\\Skipped call of routine '%1' on restart", "DSWaitForFile"), "@Wait_For_File")
+      r$V0S10 = Raise(cp$value<1>)
+      IdV0S10%%Result1%%15 = r$V0S10
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0061\\%1 (ROUTINE %2) skipped", "Wait_For_File":@FM:"DSWaitForFile"))
+      Goto L$V0S10$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0058\\%1 (ROUTINE %2) started", "Wait_For_File":@FM:"DSWaitForFile"))
+   rtn$ok = DSCheckRoutine("DSWaitForFile")
+   If (Not(rtn$ok)) Then
+      err$source = "Wait_For_File"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0005\\BASIC routine is not cataloged: %1", "DSWaitForFile")
+      msg$id = "@Wait_For_File"; GoTo L$ERROR
+   End
+   p$V0S10$0 = "-/home/dsadm/ds324Files/StartRun timeout=":-1
+   Call 'DSWaitForFile'(r$V0S10, p$V0S10$0)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "Wait_For_File":@FM:r$V0S10))
+   IdV0S10%%Result1%%15 = r$V0S10
+   If (r$V0S10 <> 0) Then
+      err$source = "Wait_For_File"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0042\\Unhandled failure (%1) encountered calling routine %2", r$V0S10:@FM:"DSWaitForFile")
+      msg$id = "@Wait_For_File"; GoTo L$ERROR
+   End
+   If b$InErrorRef Or (r$V0S10 <> 0) Then Goto L$V0S10$SKIPPED
+   cp$value = Lower(r$V0S10)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, r$V0S10$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0026\\Checkpointed call of routine '%1'", "DSWaitForFile"), "@Wait_For_File")
+**************************************************
+L$V0S10$SKIPPED:
+   GoTo L$V0S0$START
+L$V0S10$RETURN$1:
+   GoTo L$RETURN$1
+**************************************************
+L$WAITFORJOB:
+   If handle$list = "" Then GoTo L$FINISH
+   handle$ = DSWaitForJob(handle$list)
+   If handle$ = 0 Then handle$ = handle$list<1>
+   Locate handle$ In handle$list Setting index$ Then
+      id$ = id$list<index$>
+      Del id$list<index$>; Del handle$list<index$>
+      b$Abandoning = abort$list<index$>; Del abort$list<index$>
+      Begin Case
+      Case id$ = "V0S0"
+         GoTo L$V0S0$FINISHED
+      Case id$ = "V0S1"
+         GoTo L$V0S1$FINISHED
+      Case id$ = "V0S2"
+         GoTo L$V0S2$FINISHED
+      Case id$ = "V0S3"
+         GoTo L$V0S3$FINISHED
+      End Case
+   End
+* Error if fall though
+   handle$list = ""
+   err$source = "@Coordinator"; err$number = -1
+   msg$ = DSMakeMsg("DSTAGE_JSG_M_0008\\Error calling DSWaitForJob(), code=%1[E]", handle$)
+   msg$id = "@Coordinator"; GoTo L$ERROR
+**************************************************
+L$ERROR:
+   Call DSLogWarn(DSMakeMsg("DSTAGE_JSG_M_0009\\Controller problem: %1", msg$), msg$id)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0052\\Exception raised: %1", msg$id:", ":msg$))
+   If Not(b$InErrorRef) Then
+      dummy$ = DSCheckPointSetValue(DSJ.ME, "!", DSMakeMsg("DSTAGE_JSG_M_0031\\Failed at: %1, Reason=%2", err$source:@FM:msg$))
+   End
+   abort$list = Ifs(handle$list, Str(1:@FM, DCount(handle$list, @FM)), "")
+   b$Abandoning = @True
+   GoTo L$WAITFORJOB
+L$ABORT:
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0055\\Sequence failed (restartable)", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   Call DSLogFatal(DSMakeMsg("DSTAGE_JSG_M_0014\\Sequence job (restartable) will abort due to previous unrecoverable errors", ""), "@Coordinator")
+**************************************************
+L$FINISH:
+   If b$Abandoning Then GoTo L$ABORT
+*** At successful exit remove checkpoint record
+   If Not(b$InErrorRef) And DSCheckPointExists(DSJ.ME, cp$dtm) Then
+      dummy$ = DSCheckPointDelete(DSJ.ME)
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0018\\Removed checkpoint record at successful completion of sequence", ""), "@Coordinator")
+   End
+   If (seq$V1S0$status = 1) Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0072\\Note: Sequencer '%1' was entered, but never exited", "Sequencer_9"), "@Coordinator")
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0054\\Sequence finished OK", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   L$EXIT: Return To L$EXIT
+ 
+
+=+=+=+=
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Prompt "Report score"
+         Default "False"
+         HelpTxt "If set, the Parallel job will produce a report showing the operators, processes and data sets in a running application."
+         ParamType "5"
+         ListValues "False\(9)True"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Prompt "ORACLE_SYS_ID"
+         Default "ORA2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Prompt "ORA_SCHEMA"
+         Default "DEV2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Prompt "Configuration file"
+         Default "/home/dsadm/Ascential/DataStage/Configurations/default.apt"
+         HelpTxt "The Parallel job configuration file."
+         ParamType "4"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Prompt "FileData"
+         Default "031005"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      Dependencies "CJobDepend"
+      BEGIN DSSUBRECORD
+         Name "Warehouse_01"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_02"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_03"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_04_Sequential"
+         Type "0"
+      END DSSUBRECORD
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "2"
+      Category "seqjobs"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      JobSeqCodeGenOpts "handleaborts,checkpoints"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S1|V0S2|V0S3|V1S0|V3S0|V0S10"
+      StageXPos "168|312|456|600|552|744|72"
+      StageYPos "288|288|288|288|480|480|168"
+      StageTypes "CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSSequencer|CJSExecCmdActivity|CJSWaitFileActivity"
+      NextStageID "17"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48|48|48|48"
+      StageYSize "48|48|48|48|48|48|48"
+      ContainerViewSizing "0066 0087 0670 0519 0000 0001 0000 0120"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_01"
+      NextID "4"
+      InputPins "V0S0P3"
+      OutputPins "V0S0P1|V0S0P2"
+      ExecutionType "1"
+      Jobname "Warehouse_01"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Description "FileDate"
+         ValueType "4"
+         DisplayValue "FileDate"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S1"
+      ConditionType "6"
+      TriggerExpression "Warehouse_01.$JobStatus = DSJS.RUNOK  Or Warehouse_01.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "224"
+      TopTextPos "312"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "281"
+      TopTextPos "381"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Wait_For_File"
+      Partner "V0S10"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_02"
+      NextID "4"
+      InputPins "V0S1P1"
+      OutputPins "V0S1P2|V0S1P3"
+      ExecutionType "1"
+      Jobname "Warehouse_02"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSWaitFileActivity"
+      Readonly "0"
+      Name "Wait_For_File"
+      NextID "2"
+      OutputPins "V0S10P1"
+      Path "/home/dsadm/ds324Files/StartRun"
+      WaitToAppear "0"
+      Waitperiod "0"
+      CheckPoint "0"
+      StageType "CWaitForFileActivity"
+      DontTimeOut "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Wait_For_File"
+      Partner "V0S0"
+      ConditionType "0"
+      TriggerExpression "N/A"
+      LeftTextPos "143"
+      TopTextPos "232"
+      SourceID "V0S10"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S2"
+      ConditionType "6"
+      TriggerExpression "Warehouse_02.$JobStatus = DSJS.RUNOK  Or Warehouse_02.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "374"
+      TopTextPos "312"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "419"
+      TopTextPos "381"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_03"
+      NextID "4"
+      InputPins "V0S2P1"
+      OutputPins "V0S2P2|V0S2P3"
+      ExecutionType "1"
+      Jobname "Warehouse_03"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S3"
+      ConditionType "6"
+      TriggerExpression "Warehouse_03.$JobStatus = DSJS.RUNOK  Or Warehouse_03.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "510"
+      TopTextPos "312"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "483"
+      TopTextPos "362"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_04"
+      NextID "4"
+      InputPins "V0S3P1"
+      OutputPins "V0S3P2"
+      ExecutionType "1"
+      Jobname "Warehouse_04_Sequential"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Description "$ORACLE_SYS_ID"
+         ValueType "4"
+         DisplayValue "$ORACLE_SYS_ID"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Description "$ORA_SCHEMA"
+         ValueType "4"
+         DisplayValue "$ORA_SCHEMA"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "LoadNum"
+         Description "1"
+         ValueType "4"
+         DisplayValue "1"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_04_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "611"
+      TopTextPos "389"
+      SourceID "V0S3"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSSequencer"
+      Readonly "0"
+      Name "Sequencer_9"
+      NextID "7"
+      InputPins "V1S0P1|V1S0P2|V1S0P3|V1S0P4"
+      OutputPins "V1S0P6"
+      SequencerType "1"
+      StageType "CSequencer"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01_warnings"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02_warnings"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03_warnings"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P4"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_04_warnings"
+      Partner "V0S3"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P6"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warnings"
+      Partner "V3S0"
+      ConditionType "0"
+      LeftTextPos "659"
+      TopTextPos "506"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V3S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSExecCmdActivity"
+      Readonly "0"
+      Name "Command_Warnings"
+      NextID "2"
+      InputPins "V3S0P1"
+      Path "home/dsadm/ds324Files/Echo_Script.sh"
+      Parameters "#Warehouse_01.$JobName#=#Warehouse_01.$JobStatus#    #Warehouse_02.$JobName#=#Warehouse_02.$JobStatus#    #Warehouse_03.$JobName#=#Warehouse_03.$JobStatus#     #Warehouse_04.$JobName#=#Warehouse_04.$UserStatus# "
+      CheckPoint "0"
+      StageType "CExecCommandActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V3S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warnings"
+      Partner "V1S0"
+      LinkType "1"
+   END DSRECORD
+END DSJOB
+BEGIN DSJOB
+   Identifier "seq_Warehouse_04"
+   DateModified "2005-08-10"
+   TimeModified "10.07.03"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "seq_Warehouse_04"
+      NextID "5"
+      Container "V0"
+      JobVersion "50.0.0"
+      JobControlCode =+=+=+=
+* Tokens were replaced below as follows:
+* IdV0S0%%Result2%%0 <= Warehouse_01.$UserStatus
+* IdV0S0%%Result1%%1 <= Warehouse_01.$JobStatus
+* IdV0S0%%Name%%2 <= Warehouse_01.$JobName
+* IdV0S1%%Result2%%3 <= Warehouse_02.$UserStatus
+* IdV0S1%%Result1%%4 <= Warehouse_02.$JobStatus
+* IdV0S1%%Name%%5 <= Warehouse_02.$JobName
+* IdV0S2%%Result2%%6 <= Warehouse_03.$UserStatus
+* IdV0S2%%Result1%%7 <= Warehouse_03.$JobStatus
+* IdV0S2%%Name%%8 <= Warehouse_03.$JobName
+* IdV0S3%%Result2%%9 <= Warehouse_04.$UserStatus
+* IdV0S3%%Result1%%10 <= Warehouse_04.$JobStatus
+* IdV0S3%%Name%%11 <= Warehouse_04.$JobName
+* IdV3S0%%Result1%%12 <= Command_Warnings.$ReturnValue
+* IdV3S0%%Name%%13 <= Command_Warnings.$CommandName
+* IdV3S0%%Result2%%14 <= Command_Warnings.$CommandOutput
+* IdV0S10%%Result1%%15 <= Wait_For_File.$ReturnValue
+* IdV4S0%%Result1%%16 <= Command_Exceptions.$ReturnValue
+* IdV4S0%%Name%%17 <= Command_Exceptions.$CommandName
+* IdV4S0%%Result2%%18 <= Command_Exceptions.$CommandOutput
+* IdV4S3%%Param%%19 <= Exception_Handler_13.$ErrSource
+* IdV4S3%%Param%%20 <= Exception_Handler_13.$ErrNumber
+* IdV4S3%%Param%%21 <= Exception_Handler_13.$ErrMessage
+*
+*** [Generated at 2005-07-21 15:04:18 - 7.5.0.25]
+   $INCLUDE DSINCLUDE DSJ_XFUNCS.H
+   EQU Time$$ Lit "Oconv(Time(), 'MTS:'):': '"
+****************************************
+* Graphical Sequencer generated code for Job seq_Warehouse_04
+****************************************
+   
+   seq$V1S0$count = 0
+   seq$V1S0$status = 0
+   handle$list = ""
+   id$list = ""
+   abort$list = ""
+   b$Abandoning = @False
+   b$CPRestarted = @False
+   b$InErrorRef = @False
+   terminator$id = ""
+   summary$restarting = @False
+*** Create new checkpoint for sequence if not restarting
+   If DSCheckPointExists(DSJ.ME, cp$dtm) Then GoTo L$RESTART
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0015\\Starting new run of checkpointed Sequence job", ""), "@Coordinator")
+   If (Not(DSCheckPointValidate(DSJ.ME, cp$msg))) Then
+      err$source = "@Coordinator"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0016\\Error creating checkpoint record<L>%1", cp$msg)
+      msg$id = "@Coordinator"; GoTo L$ERROR
+   End
+   GoTo L$MAINSTART
+L$RESTART:
+*** Validate restarted job matches prior state
+   summary$restarting = @True
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0017\\Sequence job is being restarted after failure<L>Checkpoint record last modified at %1", cp$dtm), "@Coordinator")
+   b$CPRestarted = @True
+   If Not(DSCheckPointValidate(DSJ.ME, cp$msg)) Then
+      Call DSLogWarn(cp$msg, "@Coordinator")
+   End
+L$MAINSTART:
+*** Sequence start point
+   summary$ = DSMakeMsg("DSTAGE_JSG_M_0048\\Summary of sequence run", "")
+   If summary$restarting Then
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0049\\Sequence restarted after failure", ""))
+   End Else
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0050\\Sequence started (checkpointing on)", ""))
+   End
+   GoTo L$V0S10$START
+L$RETURN$1:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S0$START:
+*** Activity "Warehouse_01": Initialize job
+   b$InErrorRef$V0S0 = b$InErrorRef
+   jb$V0S0 = "Warehouse_01"
+   b$V0S0skipping = @False
+   h$V0S0$cp = "h$V0S0"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S0$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S0), "@Warehouse_01")
+      job$V0S0$status = Raise(cp$value<1>)
+      job$V0S0$userstatus = Raise(cp$value<2>)
+      IdV0S0%%Result2%%0 = job$V0S0$userstatus
+      IdV0S0%%Result1%%1 = job$V0S0$status
+      IdV0S0%%Name%%2 = jb$V0S0
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_01":@FM:jb$V0S0))
+      b$V0S0skipping = @True
+      Goto L$V0S0$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_01":@FM:jb$V0S0))
+   h$V0S0 = DSAttachJob(jb$V0S0, DSJ.ERRNONE)
+   If (Not(h$V0S0)) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   h$V0S0 = DSPrepareJob(h$V0S0)
+   If (Not(h$V0S0)) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S0:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+L$V0S0$PREPARED:
+   p$V0S0$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S0, "$APT_CONFIG_FILE", p$V0S0$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S0, "$APT_DUMP_SCORE", p$V0S0$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   p$V0S0$3 = (FileDate)
+   err$code = DSSetParam(h$V0S0, "FileDate", p$V0S0$3)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "FileDate":@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S0, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_01"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S0:@FM:err$code)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S0
+   id$list<-1> = "V0S0"
+   GoTo L$V0S10$RETURN$1
+**************************************************
+L$V0S0$FINISHED:
+   job$V0S0$status = DSGetJobInfo(h$V0S0, DSJ.JOBSTATUS)
+   job$V0S0$userstatus = DSGetJobInfo(h$V0S0, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_01":@FM:jb$V0S0:@FM:job$V0S0$status))
+   IdV0S0%%Result2%%0 = job$V0S0$userstatus
+   IdV0S0%%Result1%%1 = job$V0S0$status
+   IdV0S0%%Name%%2 = jb$V0S0
+   rpt$V0S0 = DSMakeJobReport(h$V0S0, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S0)
+   If (job$V0S0$status <> DSJS.RUNOK And job$V0S0$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_01"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S0)
+      msg$id = "@Warehouse_01"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S0 Or (job$V0S0$status <> DSJS.RUNOK And job$V0S0$status <> DSJS.RUNWARN) Then Goto L$V0S0$SKIPPED
+   cp$value = Lower(job$V0S0$status)
+   cp$value<2> = Lower(job$V0S0$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S0$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S0), "@Warehouse_01")
+**************************************************
+L$V0S0$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S0$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S0%%Result1%%1 = DSJS.RUNOK  Or IdV0S0%%Result1%%1 = DSJS.RUNWARN) Then GoTo L$V0S1$START
+L$V0S0$RETURN$2:
+   If b$V0S0skipping Then GoTo L$V0S10$RETURN$1
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S1$START:
+*** Activity "Warehouse_02": Initialize job
+   b$InErrorRef$V0S1 = b$InErrorRef
+   jb$V0S1 = "Warehouse_02"
+   b$V0S1skipping = @False
+   h$V0S1$cp = "h$V0S1"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S1$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S1), "@Warehouse_02")
+      job$V0S1$status = Raise(cp$value<1>)
+      job$V0S1$userstatus = Raise(cp$value<2>)
+      IdV0S1%%Result2%%3 = job$V0S1$userstatus
+      IdV0S1%%Result1%%4 = job$V0S1$status
+      IdV0S1%%Name%%5 = jb$V0S1
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_02":@FM:jb$V0S1))
+      b$V0S1skipping = @True
+      Goto L$V0S1$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_02":@FM:jb$V0S1))
+   h$V0S1 = DSAttachJob(jb$V0S1, DSJ.ERRNONE)
+   If (Not(h$V0S1)) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   h$V0S1 = DSPrepareJob(h$V0S1)
+   If (Not(h$V0S1)) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S1:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+L$V0S1$PREPARED:
+   p$V0S1$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S1, "$APT_CONFIG_FILE", p$V0S1$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   p$V0S1$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S1, "$APT_DUMP_SCORE", p$V0S1$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S1, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_02"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S1:@FM:err$code)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S1
+   id$list<-1> = "V0S1"
+   GoTo L$V0S0$RETURN$2
+**************************************************
+L$V0S1$FINISHED:
+   job$V0S1$status = DSGetJobInfo(h$V0S1, DSJ.JOBSTATUS)
+   job$V0S1$userstatus = DSGetJobInfo(h$V0S1, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_02":@FM:jb$V0S1:@FM:job$V0S1$status))
+   IdV0S1%%Result2%%3 = job$V0S1$userstatus
+   IdV0S1%%Result1%%4 = job$V0S1$status
+   IdV0S1%%Name%%5 = jb$V0S1
+   rpt$V0S1 = DSMakeJobReport(h$V0S1, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S1)
+   If (job$V0S1$status <> DSJS.RUNOK And job$V0S1$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_02"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S1)
+      msg$id = "@Warehouse_02"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S1 Or (job$V0S1$status <> DSJS.RUNOK And job$V0S1$status <> DSJS.RUNWARN) Then Goto L$V0S1$SKIPPED
+   cp$value = Lower(job$V0S1$status)
+   cp$value<2> = Lower(job$V0S1$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S1$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S1), "@Warehouse_02")
+**************************************************
+L$V0S1$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S1$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S1%%Result1%%4 = DSJS.RUNOK  Or IdV0S1%%Result1%%4 = DSJS.RUNWARN) Then GoTo L$V0S2$START
+L$V0S1$RETURN$2:
+   If b$V0S1skipping Then GoTo L$V0S0$RETURN$2
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S2$START:
+*** Activity "Warehouse_03": Initialize job
+   b$InErrorRef$V0S2 = b$InErrorRef
+   jb$V0S2 = "Warehouse_03"
+   b$V0S2skipping = @False
+   h$V0S2$cp = "h$V0S2"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S2$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S2), "@Warehouse_03")
+      job$V0S2$status = Raise(cp$value<1>)
+      job$V0S2$userstatus = Raise(cp$value<2>)
+      IdV0S2%%Result2%%6 = job$V0S2$userstatus
+      IdV0S2%%Result1%%7 = job$V0S2$status
+      IdV0S2%%Name%%8 = jb$V0S2
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_03":@FM:jb$V0S2))
+      b$V0S2skipping = @True
+      Goto L$V0S2$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_03":@FM:jb$V0S2))
+   h$V0S2 = DSAttachJob(jb$V0S2, DSJ.ERRNONE)
+   If (Not(h$V0S2)) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   h$V0S2 = DSPrepareJob(h$V0S2)
+   If (Not(h$V0S2)) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S2:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+L$V0S2$PREPARED:
+   p$V0S2$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S2, "$APT_CONFIG_FILE", p$V0S2$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   p$V0S2$2 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S2, "$APT_DUMP_SCORE", p$V0S2$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S2, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_03"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S2:@FM:err$code)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S2
+   id$list<-1> = "V0S2"
+   GoTo L$V0S1$RETURN$2
+**************************************************
+L$V0S2$FINISHED:
+   job$V0S2$status = DSGetJobInfo(h$V0S2, DSJ.JOBSTATUS)
+   job$V0S2$userstatus = DSGetJobInfo(h$V0S2, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_03":@FM:jb$V0S2:@FM:job$V0S2$status))
+   IdV0S2%%Result2%%6 = job$V0S2$userstatus
+   IdV0S2%%Result1%%7 = job$V0S2$status
+   IdV0S2%%Name%%8 = jb$V0S2
+   rpt$V0S2 = DSMakeJobReport(h$V0S2, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S2)
+   If (job$V0S2$status <> DSJS.RUNOK And job$V0S2$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_03"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S2)
+      msg$id = "@Warehouse_03"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S2 Or (job$V0S2$status <> DSJS.RUNOK And job$V0S2$status <> DSJS.RUNWARN) Then Goto L$V0S2$SKIPPED
+   cp$value = Lower(job$V0S2$status)
+   cp$value<2> = Lower(job$V0S2$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S2$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S2), "@Warehouse_03")
+**************************************************
+L$V0S2$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S2$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If (IdV0S2%%Result1%%7 = DSJS.RUNOK  Or IdV0S2%%Result1%%7 = DSJS.RUNWARN) Then GoTo L$V0S3$START
+L$V0S2$RETURN$2:
+   If b$V0S2skipping Then GoTo L$V0S1$RETURN$2
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S3$START:
+*** Activity "Warehouse_04": Initialize job
+   b$InErrorRef$V0S3 = b$InErrorRef
+   jb$V0S3 = "Warehouse_04_Sequential"
+   b$V0S3skipping = @False
+   h$V0S3$cp = "h$V0S3"
+   If DSCheckPointGetValue(DSJ.ME, h$V0S3$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0021\\Skipped run of job '%1' on restart", jb$V0S3), "@Warehouse_04")
+      job$V0S3$status = Raise(cp$value<1>)
+      job$V0S3$userstatus = Raise(cp$value<2>)
+      IdV0S3%%Result2%%9 = job$V0S3$userstatus
+      IdV0S3%%Result1%%10 = job$V0S3$status
+      IdV0S3%%Name%%11 = jb$V0S3
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0060\\%1 (JOB %2) skipped", "Warehouse_04":@FM:jb$V0S3))
+      b$V0S3skipping = @True
+      Goto L$V0S3$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0057\\%1 (JOB %2) started", "Warehouse_04":@FM:jb$V0S3))
+   h$V0S3 = DSAttachJob(jb$V0S3, DSJ.ERRNONE)
+   If (Not(h$V0S3)) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0001\\Error calling DSAttachJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   h$V0S3 = DSPrepareJob(h$V0S3)
+   If (Not(h$V0S3)) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0012\\Error calling DSPrepareJob(%1)<L>%2", jb$V0S3:@FM:DSGetLastErrorMsg())
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+L$V0S3$PREPARED:
+   p$V0S3$1 = ($APT_CONFIG_FILE)
+   err$code = DSSetParam(h$V0S3, "$APT_CONFIG_FILE", p$V0S3$1)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_CONFIG_FILE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$2 = ($ORACLE_SYS_ID)
+   err$code = DSSetParam(h$V0S3, "$ORACLE_SYS_ID", p$V0S3$2)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORACLE_SYS_ID":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$3 = ($ORA_SCHEMA)
+   err$code = DSSetParam(h$V0S3, "$ORA_SCHEMA", p$V0S3$3)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$ORA_SCHEMA":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$4 = ($APT_DUMP_SCORE)
+   err$code = DSSetParam(h$V0S3, "$APT_DUMP_SCORE", p$V0S3$4)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "$APT_DUMP_SCORE":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   p$V0S3$5 = (1)
+   err$code = DSSetParam(h$V0S3, "LoadNum", p$V0S3$5)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0002\\Error calling DSSetParam(%1), code=%2[E]", "LoadNum":@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   err$code = DSRunJob(h$V0S3, DSJ.RUNNORMAL)
+   If (err$code <> DSJE.NOERROR) Then
+      err$source = "Warehouse_04"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0003\\Error calling DSRunJob(%1), code=%2[E]", jb$V0S3:@FM:err$code)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   handle$list<-1> = h$V0S3
+   id$list<-1> = "V0S3"
+   GoTo L$V0S2$RETURN$2
+**************************************************
+L$V0S3$FINISHED:
+   job$V0S3$status = DSGetJobInfo(h$V0S3, DSJ.JOBSTATUS)
+   job$V0S3$userstatus = DSGetJobInfo(h$V0S3, DSJ.USERSTATUS)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0063\\%1 (JOB %2) finished, status=%3[E]", "Warehouse_04":@FM:jb$V0S3:@FM:job$V0S3$status))
+   IdV0S3%%Result2%%9 = job$V0S3$userstatus
+   IdV0S3%%Result1%%10 = job$V0S3$status
+   IdV0S3%%Name%%11 = jb$V0S3
+   rpt$V0S3 = DSMakeJobReport(h$V0S3, 1, "CRLF")
+   dummy$ = DSDetachJob(h$V0S3)
+   If (job$V0S3$status <> DSJS.RUNOK And job$V0S3$status <> DSJS.RUNWARN And Not(b$Abandoning)) Then
+      err$source = "Warehouse_04"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0024\\Unhandled abort encountered in job %1", jb$V0S3)
+      msg$id = "@Warehouse_04"; GoTo L$ERROR
+   End
+   If b$InErrorRef$V0S3 Or (job$V0S3$status <> DSJS.RUNOK And job$V0S3$status <> DSJS.RUNWARN) Then Goto L$V0S3$SKIPPED
+   cp$value = Lower(job$V0S3$status)
+   cp$value<2> = Lower(job$V0S3$userstatus)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, h$V0S3$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0025\\Checkpointed run of job '%1'", jb$V0S3), "@Warehouse_04")
+**************************************************
+L$V0S3$SKIPPED:
+   If b$Abandoning Then GoTo L$WAITFORJOB
+   If (job$V0S3$status = DSJS.RUNWARN) Then GoSub L$V1S0$START
+   If b$V0S3skipping Then GoTo L$V0S2$RETURN$2
+   GoTo L$WAITFORJOB
+**************************************************
+L$V1S0$START:
+*** Sequencer "Sequencer_9": wait until inputs ready
+   seq$V1S0$status = 1
+   If seq$V1S0$count > 0 Then Return
+   seq$V1S0$count += 1
+   seq$V1S0$status = 2
+   GoTo L$V3S0$START
+L$V1S0$RETURN$1:
+   Return
+**************************************************
+L$V3S0$START:
+*** Activity "Command_Warnings": Execute command
+   x$V3S0$cp = "x$V3S0"
+   If DSCheckPointGetValue(DSJ.ME, x$V3S0$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0023\\Skipped execution of command '%1' on restart", "home/dsadm/ds324Files/Echo_Script.sh"), "@Command_Warnings")
+      x$V3S0 = Raise(cp$value<1>)
+      x$V3S0$output = Raise(cp$value<2>)
+      IdV3S0%%Result1%%12 = x$V3S0
+      IdV3S0%%Name%%13 = "home/dsadm/ds324Files/Echo_Script.sh"
+      IdV3S0%%Result2%%14 = x$V3S0$output
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0062\\%1 (COMMAND %2) skipped", "Command_Warnings":@FM:"home/dsadm/ds324Files/Echo_Script.sh"))
+      Goto L$V3S0$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0059\\%1 (COMMAND %2) started", "Command_Warnings":@FM:"home/dsadm/ds324Files/Echo_Script.sh"))
+   p$V3S0$1 = (IdV0S0%%Name%%2:"=":IdV0S0%%Result1%%1:"    ":IdV0S1%%Name%%5:"=":IdV0S1%%Result1%%4:"    ":IdV0S2%%Name%%8:"=":IdV0S2%%Result1%%7:"     ":IdV0S3%%Name%%11:"=":IdV0S3%%Result2%%9:" ")
+   x$cmd = "home/dsadm/ds324Files/Echo_Script.sh":" ":p$V3S0$1
+   x$type = (If System(91) = 1 Then "NT" Else "UNIX")
+   Call DSExecute(x$type, x$cmd, x$V3S0$output, x$V3S0)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0007\\Executed: %1<L>Reply=%2<L>Output from command ====><L>%3", x$cmd:@FM:x$V3S0:@FM:Lower(x$V3S0$output)), "@Command_Warnings")
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "Command_Warnings":@FM:x$V3S0))
+   IdV3S0%%Result1%%12 = x$V3S0
+   IdV3S0%%Name%%13 = "home/dsadm/ds324Files/Echo_Script.sh"
+   IdV3S0%%Result2%%14 = x$V3S0$output
+   If (x$V3S0 <> 0) Then
+      err$source = "Command_Warnings"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0044\\Unhandled failure (%1) encountered executing command %2", x$V3S0:@FM:"home/dsadm/ds324Files/Echo_Script.sh")
+      msg$id = "@Command_Warnings"; GoTo L$ERROR
+   End
+   If b$InErrorRef Or (x$V3S0 <> 0) Then Goto L$V3S0$SKIPPED
+   cp$value = Lower(x$V3S0)
+   cp$value<2> = Lower(x$V3S0$output)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, x$V3S0$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0027\\Checkpointed execution of command '%1'", "home/dsadm/ds324Files/Echo_Script.sh"), "@Command_Warnings")
+**************************************************
+L$V3S0$SKIPPED:
+   GoTo L$V1S0$RETURN$1
+**************************************************
+L$V0S10$START:
+*** Activity "Wait_For_File": Call routine
+   r$V0S10$cp = "r$V0S10"
+   If DSCheckPointGetValue(DSJ.ME, r$V0S10$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0022\\Skipped call of routine '%1' on restart", "DSWaitForFile"), "@Wait_For_File")
+      r$V0S10 = Raise(cp$value<1>)
+      IdV0S10%%Result1%%15 = r$V0S10
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0061\\%1 (ROUTINE %2) skipped", "Wait_For_File":@FM:"DSWaitForFile"))
+      Goto L$V0S10$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0058\\%1 (ROUTINE %2) started", "Wait_For_File":@FM:"DSWaitForFile"))
+   rtn$ok = DSCheckRoutine("DSWaitForFile")
+   If (Not(rtn$ok)) Then
+      err$source = "Wait_For_File"; err$number = -1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0005\\BASIC routine is not cataloged: %1", "DSWaitForFile")
+      msg$id = "@Wait_For_File"; GoTo L$ERROR
+   End
+   p$V0S10$0 = "-/home/dsadm/ds324Files/StartRun timeout=":-1
+   Call 'DSWaitForFile'(r$V0S10, p$V0S10$0)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "Wait_For_File":@FM:r$V0S10))
+   IdV0S10%%Result1%%15 = r$V0S10
+   If (r$V0S10 <> 0) Then
+      err$source = "Wait_For_File"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0042\\Unhandled failure (%1) encountered calling routine %2", r$V0S10:@FM:"DSWaitForFile")
+      msg$id = "@Wait_For_File"; GoTo L$ERROR
+   End
+   If b$InErrorRef Or (r$V0S10 <> 0) Then Goto L$V0S10$SKIPPED
+   cp$value = Lower(r$V0S10)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, r$V0S10$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0026\\Checkpointed call of routine '%1'", "DSWaitForFile"), "@Wait_For_File")
+**************************************************
+L$V0S10$SKIPPED:
+   GoTo L$V0S0$START
+L$V0S10$RETURN$1:
+   GoTo L$RETURN$1
+**************************************************
+L$V4S0$START:
+*** Activity "Command_Exceptions": Execute command
+   x$V4S0$cp = "x$V4S0"
+   If DSCheckPointGetValue(DSJ.ME, x$V4S0$cp, cp$value) = DSJE.NOERROR Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0023\\Skipped execution of command '%1' on restart", "/home/dsadm/ds324Files/Echo_Script.sh"), "@Command_Exceptions")
+      x$V4S0 = Raise(cp$value<1>)
+      x$V4S0$output = Raise(cp$value<2>)
+      IdV4S0%%Result1%%16 = x$V4S0
+      IdV4S0%%Name%%17 = "/home/dsadm/ds324Files/Echo_Script.sh"
+      IdV4S0%%Result2%%18 = x$V4S0$output
+      summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0062\\%1 (COMMAND %2) skipped", "Command_Exceptions":@FM:"/home/dsadm/ds324Files/Echo_Script.sh"))
+      Goto L$V4S0$SKIPPED
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0059\\%1 (COMMAND %2) started", "Command_Exceptions":@FM:"/home/dsadm/ds324Files/Echo_Script.sh"))
+   p$V4S0$1 = "Exceptions occured"
+   x$cmd = "/home/dsadm/ds324Files/Echo_Script.sh":" ":p$V4S0$1
+   x$type = (If System(91) = 1 Then "NT" Else "UNIX")
+   Call DSExecute(x$type, x$cmd, x$V4S0$output, x$V4S0)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0007\\Executed: %1<L>Reply=%2<L>Output from command ====><L>%3", x$cmd:@FM:x$V4S0:@FM:Lower(x$V4S0$output)), "@Command_Exceptions")
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0064\\%1 finished, reply=%2", "Command_Exceptions":@FM:x$V4S0))
+   IdV4S0%%Result1%%16 = x$V4S0
+   IdV4S0%%Name%%17 = "/home/dsadm/ds324Files/Echo_Script.sh"
+   IdV4S0%%Result2%%18 = x$V4S0$output
+   If (x$V4S0 <> 0) Then
+      err$source = "Command_Exceptions"; err$number = 1
+      msg$ = DSMakeMsg("DSTAGE_JSG_M_0044\\Unhandled failure (%1) encountered executing command %2", x$V4S0:@FM:"/home/dsadm/ds324Files/Echo_Script.sh")
+      msg$id = "@Command_Exceptions"; GoTo L$ERROR
+   End
+   If b$InErrorRef Or (x$V4S0 <> 0) Then Goto L$V4S0$SKIPPED
+   cp$value = Lower(x$V4S0)
+   cp$value<2> = Lower(x$V4S0$output)
+   dummy$ = DSCheckPointSetValue(DSJ.ME, x$V4S0$cp, cp$value)
+   Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0027\\Checkpointed execution of command '%1'", "/home/dsadm/ds324Files/Echo_Script.sh"), "@Command_Exceptions")
+**************************************************
+L$V4S0$SKIPPED:
+   GoTo L$V0S13$RETURN$1
+**************************************************
+L$V4S2$START:
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0065\\%1 Executed", "TerminateJobs"))
+* Send stop request to any outstanding child jobs
+   For index$ = 1 To DCount(handle$list, @FM)
+      handle$ = handle$list<index$>
+      If handle$ <> "" Then
+         job$name = DSGetJobInfo(handle$, DSJ.JOBNAME)
+         job$invid = DSGetJobInfo(handle$, DSJ.JOBINVOCATIONID)
+         if job$invid <> "" Then job$name = job$name:".":job$invid
+         Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0019\\Sending STOP request to job: %1", job$name), "@TerminateJobs")
+         dummy$ = DSStopJob(handle$)
+      End
+   Next index$
+* Wait for any outstanding child jobs to finish
+   terminator$id = "V4S2"
+   abort$list = Ifs(handle$list, Str(1:@FM, DCount(handle$list, @FM)), "")
+   GoTo L$WAITFORJOB
+L$V4S2$FINISHED:
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0069\\Sequence terminated", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   Call DSLogFatal(DSMakeMsg("DSTAGE_JSG_M_0020\\Sequence abort requested", ""), "@TerminateJobs")
+**************************************************
+L$V4S3$START:
+*** Decision "Exception_Handler_13"
+   GoTo L$V0S13$START
+L$V4S3$RETURN$1:
+   GoTo L$WAITFORJOB
+**************************************************
+L$V0S13$START:
+*** Decision "Nested_Condition_13"
+   GoTo L$V4S0$START
+L$V0S13$RETURN$1:
+   GoTo L$V4S2$START
+L$V0S13$RETURN$2:
+   GoTo L$V4S3$RETURN$1
+**************************************************
+L$WAITFORJOB:
+   If handle$list = "" Then GoTo L$FINISH
+   handle$ = DSWaitForJob(handle$list)
+   If handle$ = 0 Then handle$ = handle$list<1>
+   Locate handle$ In handle$list Setting index$ Then
+      id$ = id$list<index$>
+      Del id$list<index$>; Del handle$list<index$>
+      b$Abandoning = abort$list<index$>; Del abort$list<index$>
+      Begin Case
+      Case id$ = "V0S0"
+         GoTo L$V0S0$FINISHED
+      Case id$ = "V0S1"
+         GoTo L$V0S1$FINISHED
+      Case id$ = "V0S2"
+         GoTo L$V0S2$FINISHED
+      Case id$ = "V0S3"
+         GoTo L$V0S3$FINISHED
+      End Case
+   End
+* Error if fall though
+   handle$list = ""
+   err$source = "@Coordinator"; err$number = -1
+   msg$ = DSMakeMsg("DSTAGE_JSG_M_0008\\Error calling DSWaitForJob(), code=%1[E]", handle$)
+   msg$id = "@Coordinator"; GoTo L$ERROR
+**************************************************
+L$ERROR:
+   IdV4S3%%Param%%19 = err$source
+   IdV4S3%%Param%%20 = err$number
+   IdV4S3%%Param%%21 = msg$
+   Call DSLogWarn(DSMakeMsg("DSTAGE_JSG_M_0009\\Controller problem: %1", msg$), msg$id)
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0052\\Exception raised: %1", msg$id:", ":msg$))
+   If Not(b$InErrorRef) Then
+      dummy$ = DSCheckPointSetValue(DSJ.ME, "!", DSMakeMsg("DSTAGE_JSG_M_0031\\Failed at: %1, Reason=%2", err$source:@FM:msg$))
+   End
+   abort$list = Ifs(handle$list, Str(1:@FM, DCount(handle$list, @FM)), "")
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0053\\Exception handler started", ""))
+   If Not(b$InErrorRef) Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0010\\Will execute error activity: %1", "Exception_Handler_13"), msg$id)
+      b$InErrorRef = @True
+      b$NumStarted = 1
+      GoTo L$V4S3$START
+   End Else
+      Call DSLogWarn(DSMakeMsg("DSTAGE_JSG_M_0011\\Error while executing error activity: %1", "Exception_Handler_13"), msg$id)
+   End
+   b$Abandoning = @True
+   GoTo L$WAITFORJOB
+L$ABORT:
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0055\\Sequence failed (restartable)", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   Call DSLogFatal(DSMakeMsg("DSTAGE_JSG_M_0014\\Sequence job (restartable) will abort due to previous unrecoverable errors", ""), "@Coordinator")
+**************************************************
+L$FINISH:
+   Begin Case
+   Case terminator$id = "V4S2"
+      GoTo L$V4S2$FINISHED
+   End Case
+   If b$Abandoning Then GoTo L$ABORT
+*** At successful exit remove checkpoint record
+   If Not(b$InErrorRef) And DSCheckPointExists(DSJ.ME, cp$dtm) Then
+      dummy$ = DSCheckPointDelete(DSJ.ME)
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0018\\Removed checkpoint record at successful completion of sequence", ""), "@Coordinator")
+   End
+   If (seq$V1S0$status = 1) Then
+      Call DSLogInfo(DSMakeMsg("DSTAGE_JSG_M_0072\\Note: Sequencer '%1' was entered, but never exited", "Sequencer_9"), "@Coordinator")
+   End
+   summary$<1,-1> = Time$$:Convert(@VM, " ", DSMakeMsg("DSTAGE_JSG_M_0054\\Sequence finished OK", ""))
+   Call DSLogInfo(summary$, "@Coordinator")
+   L$EXIT: Return To L$EXIT
+ 
+
+=+=+=+=
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Prompt "Report score"
+         Default "False"
+         HelpTxt "If set, the Parallel job will produce a report showing the operators, processes and data sets in a running application."
+         ParamType "5"
+         ListValues "False\(9)True"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Prompt "ORACLE_SYS_ID"
+         Default "ORA2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Prompt "ORA_SCHEMA"
+         Default "DEV2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Prompt "Configuration file"
+         Default "/home/dsadm/Ascential/DataStage/Configurations/default.apt"
+         HelpTxt "The Parallel job configuration file."
+         ParamType "4"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Prompt "FileData"
+         Default "031005"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      Dependencies "CJobDepend"
+      BEGIN DSSUBRECORD
+         Name "Warehouse_01"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_02"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_03"
+         Type "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Warehouse_04_Sequential"
+         Type "0"
+      END DSSUBRECORD
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "2"
+      Category "seqjobs"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      JobSeqCodeGenOpts "handleaborts,checkpoints"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S1|V0S2|V0S3|V1S0|V3S0|V0S10|V4S0|V4S2|V4S3|V0S13"
+      StageXPos "168|312|456|600|552|744|72|624|528|240|408"
+      StageYPos "288|288|288|288|480|480|168|624|768|648|648"
+      StageTypes "CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSJobActivity|CJSSequencer|CJSExecCmdActivity|CJSWaitFileActivity|CJSExecCmdActivity|CJSTerminatorActivity|CJSExceptionHandler|CJSCondition"
+      NextStageID "17"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48|48|48|48|48|48|48|48"
+      StageYSize "48|48|48|48|48|48|48|48|48|48|48"
+      ContainerViewSizing "0066 0087 0670 0519 0000 0001 0000 0120"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_01"
+      NextID "4"
+      InputPins "V0S0P3"
+      OutputPins "V0S0P1|V0S0P2"
+      ExecutionType "1"
+      Jobname "Warehouse_01"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FileDate"
+         Description "FileDate"
+         ValueType "4"
+         DisplayValue "FileDate"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S1"
+      ConditionType "6"
+      TriggerExpression "Warehouse_01.$JobStatus = DSJS.RUNOK  Or Warehouse_01.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "225"
+      TopTextPos "286"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_01_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "281"
+      TopTextPos "381"
+      SourceID "V0S0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Wait_For_File"
+      Partner "V0S10"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_02"
+      NextID "4"
+      InputPins "V0S1P1"
+      OutputPins "V0S1P2|V0S1P3"
+      ExecutionType "1"
+      Jobname "Warehouse_02"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSWaitFileActivity"
+      Readonly "0"
+      Name "Wait_For_File"
+      NextID "2"
+      OutputPins "V0S10P1"
+      Path "/home/dsadm/ds324Files/StartRun"
+      WaitToAppear "0"
+      Waitperiod "0"
+      CheckPoint "0"
+      StageType "CWaitForFileActivity"
+      DontTimeOut "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Wait_For_File"
+      Partner "V0S0"
+      ConditionType "0"
+      TriggerExpression "N/A"
+      LeftTextPos "143"
+      TopTextPos "232"
+      SourceID "V0S10"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S13"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSCondition"
+      Readonly "0"
+      Name "Nested_Condition_13"
+      NextID "4"
+      InputPins "V0S13P3"
+      OutputPins "V0S13P1|V0S13P2"
+      StageType "CCondition"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S13P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Exception"
+      Partner "V4S2"
+      ConditionType "0"
+      LeftTextPos "513"
+      TopTextPos "748"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S13P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Exceptions"
+      Partner "V4S0"
+      ConditionType "0"
+      LeftTextPos "556"
+      TopTextPos "653"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S13P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "DSLink22"
+      Partner "V4S3"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S2"
+      ConditionType "6"
+      TriggerExpression "Warehouse_02.$JobStatus = DSJS.RUNOK  Or Warehouse_02.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "374"
+      TopTextPos "286"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_02_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "419"
+      TopTextPos "381"
+      SourceID "V0S1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_03"
+      NextID "4"
+      InputPins "V0S2P1"
+      OutputPins "V0S2P2|V0S2P3"
+      ExecutionType "1"
+      Jobname "Warehouse_03"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S3"
+      ConditionType "6"
+      TriggerExpression "Warehouse_03.$JobStatus = DSJS.RUNOK  Or Warehouse_03.$JobStatus = DSJS.RUNWARN"
+      LeftTextPos "510"
+      TopTextPos "312"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_03_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "483"
+      TopTextPos "362"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSJobActivity"
+      Readonly "0"
+      Name "Warehouse_04"
+      NextID "4"
+      InputPins "V0S3P1"
+      OutputPins "V0S3P2"
+      ExecutionType "1"
+      Jobname "Warehouse_04_Sequential"
+      ParameterValues "CParamValues"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Description "$APT_CONFIG_FILE"
+         ValueType "4"
+         DisplayValue "$APT_CONFIG_FILE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Description "$ORACLE_SYS_ID"
+         ValueType "4"
+         DisplayValue "$ORACLE_SYS_ID"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Description "$ORA_SCHEMA"
+         ValueType "4"
+         DisplayValue "$ORA_SCHEMA"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Description "$APT_DUMP_SCORE"
+         ValueType "4"
+         DisplayValue "$APT_DUMP_SCORE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "LoadNum"
+         Description "1"
+         ValueType "4"
+         DisplayValue "1"
+      END DSSUBRECORD
+      CheckPoint "0"
+      StageType "CJobActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warehouse_04_warnings"
+      Partner "V1S0"
+      ConditionType "4"
+      TriggerExpression "\"Execution finsihed with warnings\""
+      LeftTextPos "611"
+      TopTextPos "389"
+      SourceID "V0S3"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSSequencer"
+      Readonly "0"
+      Name "Sequencer_9"
+      NextID "7"
+      InputPins "V1S0P1|V1S0P2|V1S0P3|V1S0P4"
+      OutputPins "V1S0P6"
+      SequencerType "1"
+      StageType "CSequencer"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_01_warnings"
+      Partner "V0S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_02_warnings"
+      Partner "V0S1"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_03_warnings"
+      Partner "V0S2"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P4"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warehouse_04_warnings"
+      Partner "V0S3"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V1S0P6"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "Warnings"
+      Partner "V3S0"
+      ConditionType "0"
+      LeftTextPos "659"
+      TopTextPos "506"
+      SourceID "V0S2"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V3S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSExecCmdActivity"
+      Readonly "0"
+      Name "Command_Warnings"
+      NextID "2"
+      InputPins "V3S0P1"
+      Path "home/dsadm/ds324Files/Echo_Script.sh"
+      Parameters "#Warehouse_01.$JobName#=#Warehouse_01.$JobStatus#    #Warehouse_02.$JobName#=#Warehouse_02.$JobStatus#    #Warehouse_03.$JobName#=#Warehouse_03.$JobStatus#     #Warehouse_04.$JobName#=#Warehouse_04.$UserStatus# "
+      CheckPoint "0"
+      StageType "CExecCommandActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V3S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Warnings"
+      Partner "V1S0"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V4S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSExecCmdActivity"
+      Readonly "0"
+      Name "Command_Exceptions"
+      NextID "2"
+      InputPins "V4S0P1"
+      Path "/home/dsadm/ds324Files/Echo_Script.sh"
+      Parameters "Exceptions occured"
+      CheckPoint "0"
+      StageType "CExecCommandActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V4S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Exceptions"
+      Partner "V0S13"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V4S2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSTerminatorActivity"
+      Readonly "0"
+      Name "TerminateJobs"
+      NextID "2"
+      InputPins "V4S2P1"
+      TerminationType "1"
+      StageType "CTerminatorActivity"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V4S2P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityInput"
+      Readonly "0"
+      Name "Exception"
+      Partner "V0S13"
+      LinkType "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V4S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSExceptionHandler"
+      Readonly "0"
+      Name "Exception_Handler_13"
+      NextID "2"
+      OutputPins "V4S3P1"
+      StageType "CExceptionHandler"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V4S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJSActivityOutput"
+      Readonly "0"
+      Name "DSLink22"
+      Partner "V0S13"
+      ConditionType "0"
+      LeftTextPos "348"
+      TopTextPos "672"
+      SourceID "V0S13"
+   END DSRECORD
+END DSJOB

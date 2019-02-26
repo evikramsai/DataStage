@@ -1,0 +1,1767 @@
+BEGIN HEADER
+   CharacterSet "ENGLISH"
+   ExportingTool "Ascential DataStage Export"
+   ToolVersion "4"
+   ServerName "192.168.25.3"
+   ToolInstanceID "ds324"
+   MDISVersion "1.0"
+   Date "2005-10-04"
+   Time "10.15.10"
+   ServerVersion "7.5"
+END HEADER
+BEGIN DSJOB
+   Identifier "Warehouse_04_Oracle"
+   DateModified "2005-09-15"
+   TimeModified "11.40.57"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "Warehouse_04_Oracle"
+      NextID "15"
+      Container "V0"
+      JobVersion "50.0.0"
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "$APT_CONFIG_FILE"
+         Prompt "Configuration file"
+         Default "/home/dsadm/Ascential/DataStage/Configurations/default.apt"
+         HelpTxt "The Parallel job configuration file."
+         ParamType "4"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORACLE_SYS_ID"
+         Prompt "ORACLE_SYS_ID"
+         Default "ORA2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$ORA_SCHEMA"
+         Prompt "ORA_SCHEMA"
+         Default "DEV2"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "$APT_DUMP_SCORE"
+         Prompt "Report score"
+         Default "False"
+         HelpTxt "If set, the Parallel job will produce a report showing the operators, processes and data sets in a running application."
+         ParamType "5"
+         ListValues "False\(9)True"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "LoadNum"
+         Prompt "BuildNum"
+         Default "1"
+         ParamType "0"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceMode"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSeq"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceRecords"
+         Value "100"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSkip"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TracePeriod"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXDateFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXTimeFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXTimeStampFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXDecimalSeparator="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MessageHandler"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "IdentList"
+         Value "ITEMS|ITEMS_COUNTS|Aggregator_Load_Counts|Column_Generator_209|Copy_180|Transformer_13"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "ClientCodePage"
+         Value "1252"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V13S0P1_password"
+         Value "LDI@9IV@L9;M0FG"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V13S1P1_password"
+         Value "LDI@9IV@L9;M0FG"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      OrchestrateCode =+=+=+=
+#################################################################
+#### STAGE: Warehouse_Item_3
+## Operator
+copy
+## General options
+[ident('Warehouse_Item_3')]
+## Inputs
+0< [ds] '/home/dsadm/ds324Files/Sort_Warehouse_Item_3.ds'
+## Outputs
+0> [modify (
+  Item_Flag:not_nullable string[1]=Item_Flag;
+  Warehouse:not_nullable int32=Warehouse;
+  Item:not_nullable string[max=50]=Item;
+  Onhand:not_nullable string[max=15]=Onhand;
+  Onorder:not_nullable string[max=15]=Onorder;
+  Allocated:not_nullable string[max=15]=Allocated;
+  HardAllocated:not_nullable string[max=15]=HardAllocated;
+  fileNameColumn:not_nullable string[]=fileNameColumn;
+  Description:not_nullable string[max=100]=Description;
+  Count_Item:nullable int32=Count_Item;
+)] 'Warehouse_Item_3:Warehouse_Item_3.v'
+;
+
+#################################################################
+#### STAGE: ITEMS
+## Operator
+orawrite
+## Operator options
+-dboptions '{user=dsadm,password=[&__V13S0P1_password]}'
+-table '[&_ORA_SCHEMA].ITEMS'
+-drop
+-mode truncate
+-server '[&_ORACLE_SYS_ID]'
+
+## General options
+[ident('ITEMS'); jobmon_ident('ITEMS')]
+## Inputs
+0< 'Copy_180:ITEMS.v'
+;
+
+#################################################################
+#### STAGE: ITEMS_COUNTS
+## Operator
+oraupsert
+## Operator options
+-dboptions '{user=dsadm,password=[&__V13S1P1_password]}'
+-update 'UPDATE 
+[&_ORA_SCHEMA].ITEMS_COUNTS 
+SET 
+Item_Load_Count = ORCHESTRATE.Item_Load_Count, LoadTimestamp = ORCHESTRATE.LoadTimestamp 
+WHERE 
+(LoadNum = ORCHESTRATE.LoadNum)'
+-server '[&_ORACLE_SYS_ID]'
+-insert 'INSERT 
+INTO 
+[&_ORA_SCHEMA].ITEMS_COUNTS 
+(LoadNum, Item_Load_Count, LoadTimestamp) 
+VALUES 
+(ORCHESTRATE.LoadNum, ORCHESTRATE.Item_Load_Count, ORCHESTRATE.LoadTimestamp)'
+
+## General options
+[ident('ITEMS_COUNTS'); jobmon_ident('ITEMS_COUNTS'); seq]
+## Inputs
+0< 'Transformer_13:Items_Load_Count.v'
+;
+
+#################################################################
+#### STAGE: Aggregator_Load_Counts
+## Operator
+group
+## Operator options
+-hash
+-key 'record_indicator'
+-countField 'Item_Load_Count'
+
+## General options
+[ident('Aggregator_Load_Counts'); jobmon_ident('Aggregator_Load_Counts'); seq]
+## Inputs
+0< 'Column_Generator_209:Column_GeneratorOut.v'
+## Outputs
+0> [] 'Aggregator_Load_Counts:Aggregator_Load_Counts.v'
+;
+
+#################################################################
+#### STAGE: Column_Generator_209
+## Operator
+generator
+## Operator options
+-schema record
+(
+  record_indicator:string[1] {cycle={value='1'}};
+)
+
+## General options
+[ident('Column_Generator_209'); jobmon_ident('Column_Generator_209'); par]
+## Inputs
+0< 'Copy_180:ToGenerator.v'
+## Outputs
+0> [modify (
+  record_indicator:string[1]=record_indicator;
+)] 'Column_Generator_209:Column_GeneratorOut.v'
+;
+
+#################################################################
+#### STAGE: Copy_180
+## Operator
+copy
+## General options
+[ident('Copy_180'); jobmon_ident('Copy_180')]
+## Inputs
+0< 'Warehouse_Item_3:Warehouse_Item_3.v'
+## Outputs
+0> [modify (
+keep
+  Warehouse,Item,Onhand,Onorder,
+  Allocated,HardAllocated,fileNameColumn,Description;
+)] 'Copy_180:ITEMS.v'
+1> [] 'Copy_180:ToGenerator.v'
+;
+
+#################################################################
+#### STAGE: Transformer_13
+## Operator
+transform
+## Operator options
+-flag run
+-name 'V14S0_Warehouse_04_Transformer_13'
+-argvalue 'LoadNum=[&LoadNum]'
+
+## General options
+[ident('Transformer_13'); jobmon_ident('Transformer_13')]
+## Inputs
+0< 'Aggregator_Load_Counts:Aggregator_Load_Counts.v'
+## Outputs
+0> [] 'Transformer_13:Items_Load_Count.v'
+;
+
+
+=+=+=+=
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "3"
+      Category "ds434"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S5|V13S0|V13S1|V13S3|V13S4|V13S5|V14S0"
+      StageXPos "48|456|624|432|240|240|624"
+      StageYPos "240|240|240|96|96|240|96"
+      StageTypes "CCustomStage|CCustomStage|CCustomStage|CCustomStage|CCustomStage|CCustomStage|CTransformerStage"
+      NextStageID "11"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48|48|48|48"
+      StageYSize "48|48|48|48|48|48|48"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      ContainerViewSizing "0044 0058 0730 0465 0000 0001 0000 0000"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "Warehouse_Item_3"
+      NextID "3"
+      OutputPins "V0S5P2"
+      StageType "PxDataSet"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "Warehouse_Item_3"
+      Partner "V13S5"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "dataset"
+         Value "/home/dsadm/ds434Files/Sort_Warehouse_Item_3.ds"
+      END DSSUBRECORD
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Warehouse"
+         Description "Warehouse: int32"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Warehouse"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Item"
+         Description "Item: string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Item"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Onhand"
+         Description "Onhand: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Onhand"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Onorder"
+         Description "Onorder: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Onorder"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Allocated"
+         Description "Allocated: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Allocated"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "HardAllocated"
+         Description "HardAllocated: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "HardAllocated"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "fileNameColumn"
+         Description "fileNameColumn: string"
+         SqlType "12"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "fileNameColumn"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Description"
+         Description "Description: string[max=100]"
+         SqlType "12"
+         Precision "100"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Description"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Count_Item"
+         Description "Count_Item: nullable int32"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Count_Item"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "152"
+      TopTextPos "264"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "ITEMS"
+      NextID "2"
+      InputPins "V13S0P1"
+      StageType "PxOracle"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "nchar_cs"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "ITEMS"
+      Partner "V13S5"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "orawrite"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "dboptionssel"
+         Value "\(2)\(2)0\(1)\(3)dboptionssel\(2)auto\(2)0\(1)\(3)\(3)user\(2)dsadm\(2)0\(1)\(3)\(3)password\(2)LDI@9IV@L9;M0FG\(2)1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "dboptions"
+         Value "{user=dsadm,password=*******}"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Value "\(2)\(2)0\(1)\(3)tablename\(2)#$ORA_SCHEMA#.ITEMS\(2)0\(1)\(3)\(3)table\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "drop"
+         Value "drop"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "mode"
+         Value "truncate"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "truncate"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "disableConstraints"
+         Value "\(2)\(2)0\(1)\(3)disableConstraints\(2) \(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "primaryKeys"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "server"
+         Value "#$ORACLE_SYS_ID#"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Part/Col"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Part/ColExtraArgs"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Sort"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SortAdv"
+         Value "-nonStable"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SeqSort"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "_PartColSortColumns"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "ITEMS_COUNTS"
+      NextID "2"
+      InputPins "V13S1P1"
+      StageType "PxOracle"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "nchar_cs"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+         Value "seq"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Constraint"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Combinability"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "Items_Load_Count"
+      Partner "V14S0"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "oraupsert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "dboptionssel"
+         Value "\(2)\(2)0\(1)\(3)dboptionssel\(2)auto\(2)0\(1)\(3)\(3)user\(2)dsadm\(2)0\(1)\(3)\(3)password\(2)LDI@9IV@L9;M0FG\(2)1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "dboptions"
+         Value "{user=dsadm,password=*******}"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Value "\(2)\(2)0\(1)\(3)tablename\(2)#$ORA_SCHEMA#.ITEMS_COUNTS\(2)0\(1)\(3)\(3)table\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "primaryKeys"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertselection"
+         Value "upsert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "update"
+         Value =+=+=+=
+UPDATE 
+#$ORA_SCHEMA#.ITEMS_COUNTS 
+SET 
+Item_Load_Count = ORCHESTRATE.Item_Load_Count 
+WHERE 
+(LoadNum = ORCHESTRATE.LoadNum)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reject"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "server"
+         Value "#$ORACLE_SYS_ID#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "insert"
+         Value =+=+=+=
+\(2)\(2)0\(1)\(3)insert\(2)INSERT 
+INTO 
+#$ORA_SCHEMA#.ITEMS_COUNTS 
+(LoadNum, Item_Load_Count) 
+VALUES 
+(ORCHESTRATE.LoadNum, ORCHESTRATE.Item_Load_Count)\(2)0
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "drop"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "mode"
+         Value "append"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "truncate"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "deleteselection"
+         Value "autodel"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "update "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "disableConstraints"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "createPK"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Part/Col"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Sort"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SortAdv"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SeqSort"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "_PartColSortColumns"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "Aggregator_Load_Counts"
+      NextID "3"
+      InputPins "V13S3P1"
+      OutputPins "V13S3P2"
+      StageType "PxAggregator"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "method"
+         Value "hash"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "key"
+         Value "\(2)\(2)0\(1)\(3)key\(2)record_indicator\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value "count"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "nul_res"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "countField"
+         Value "\(2)\(2)0\(1)\(3)countField\(2)Item_Load_Count\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reduce"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rereduce"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+         Value "seq"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Constraint"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "Column_GeneratorOut"
+      Partner "V13S4"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Part/Col"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Sort"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SortAdv"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SeqSort"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "_PartColSortColumns"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S3P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "Aggregator_Load_Counts"
+      Partner "V14S0"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Item_Load_Count"
+         SqlType "8"
+         Precision "0"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "RecCount()"
+         Group "0"
+         ParsedDerivation "RecCount()"
+         Transform "\(1B)"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "491"
+      TopTextPos "120"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S4"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "Column_Generator_209"
+      NextID "3"
+      InputPins "V13S4P1"
+      OutputPins "V13S4P2"
+      StageType "PxColumnGenerator"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value "explicit"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "schema"
+         Value "\(2)\(2)0\(1)\(3)schema\(2)record_indicator\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "schemafile"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S4P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "ToGenerator"
+      Partner "V13S5"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S4P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "Column_GeneratorOut"
+      Partner "V13S3"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Item"
+         Description "Item: string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "ToGenerator.Item"
+         Group "0"
+         ParsedDerivation "ToGenerator.Item"
+         SourceColumn "ToGenerator.Item"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Item"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "record_indicator"
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Generate(record_indicator)"
+         Group "0"
+         ParsedDerivation "Generate(record_indicator)"
+         Transform "\(1B)"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         APTFieldProp "cycle={value='1'}"
+         ExtendedPrecision "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "305"
+      TopTextPos "120"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S5"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "Copy_180"
+      NextID "4"
+      InputPins "V13S5P1"
+      OutputPins "V13S5P2|V13S5P3"
+      StageType "PxCopy"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "force"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S5P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "Warehouse_Item_3"
+      Partner "V0S5"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S5P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "ITEMS"
+      Partner "V13S0"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Warehouse"
+         Description "Warehouse: int32"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Warehouse"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Warehouse"
+         SourceColumn "Warehouse_Item_3.Warehouse"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Item"
+         Description "Item: string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Item"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Item"
+         SourceColumn "Warehouse_Item_3.Item"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Onhand"
+         Description "Onhand: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Onhand"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Onhand"
+         SourceColumn "Warehouse_Item_3.Onhand"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Onhand"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Onorder"
+         Description "Onorder: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Onorder"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Onorder"
+         SourceColumn "Warehouse_Item_3.Onorder"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Onorder"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Allocated"
+         Description "Allocated: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Allocated"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Allocated"
+         SourceColumn "Warehouse_Item_3.Allocated"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Allocated"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "HardAllocated"
+         Description "HardAllocated: string[max=15]"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.HardAllocated"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.HardAllocated"
+         SourceColumn "Warehouse_Item_3.HardAllocated"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "HardAllocated"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "fileNameColumn"
+         Description "fileNameColumn: string"
+         SqlType "12"
+         Precision "0"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.fileNameColumn"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.fileNameColumn"
+         SourceColumn "Warehouse_Item_3.fileNameColumn"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "fileNameColumn"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Description"
+         Description "Description: string[max=100]"
+         SqlType "12"
+         Precision "100"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Description"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Description"
+         SourceColumn "Warehouse_Item_3.Description"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Description"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "341"
+      TopTextPos "264"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V13S5P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "ToGenerator"
+      Partner "V13S4"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "Item"
+         Description "Item: string[max=50]"
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Warehouse_Item_3.Item"
+         Group "0"
+         ParsedDerivation "Warehouse_Item_3.Item"
+         SourceColumn "Warehouse_Item_3.Item"
+         SortKey "0"
+         SortType "0"
+         TableDef "Orchestrate\\SchemaImports\\Sort_Warehouse_Item_3_ds"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "Item"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "264"
+      TopTextPos "192"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V14S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTransformerStage"
+      Readonly "0"
+      Name "Transformer_13"
+      NextID "5"
+      InputPins "V14S0P4"
+      OutputPins "V14S0P3"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxClassName"
+         Value "V14S0_repos_Transformer_13"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxGenCode"
+         Value =+=+=+=
+//
+// Generated file to implement the V14S0_repos_Transformer_13 transform operator.
+//
+
+// define our input/output link names
+inputname 0 Aggregator_Load_Counts;
+outputname 0 Items_Load_Count;
+
+global {
+	// Job parameter declaration
+	string LoadNum;
+}
+
+initialize {
+	// define our row rejected variable
+	int8 RowRejected0;
+
+	// define our null set variable
+	int8 NullSetVar0;
+
+}
+
+mainloop {
+	// initialise our row rejected variable
+	RowRejected0 = 1;
+
+	// evaluate columns (no constraints) for link: Items_Load_Count
+	Items_Load_Count.LoadNum = LoadNum;
+	Items_Load_Count.Item_Load_Count = Aggregator_Load_Counts.Item_Load_Count;
+	Items_Load_Count.LoadTimestamp = current_timestamp();
+	writerecord 0;
+	RowRejected0 = 0;
+}
+
+finish {
+}
+
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "JobParameterNames"
+         Value "LoadNum"
+      END DSSUBRECORD
+      StageType "CTransformerStage"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V14S0P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxOutput"
+      Readonly "0"
+      Name "Items_Load_Count"
+      Partner "V13S1"
+      RowLimit "0"
+      RoutineTransforms "\(1B)"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "LoadNum"
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "0"
+         Derivation "LoadNum"
+         Group "0"
+         ParsedDerivation "LoadNum"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Item_Load_Count"
+         SqlType "12"
+         Precision "15"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "Aggregator_Load_Counts.Item_Load_Count"
+         Group "0"
+         ParsedDerivation "Aggregator_Load_Counts.Item_Load_Count"
+         SourceColumn "Aggregator_Load_Counts.Item_Load_Count"
+         Transform "\(1B)"
+         SortKey "0"
+         SortType "0"
+         TableDef "RDBMS\\Oracle\\DEMO_STD_BLD_COUNTS_TBL2"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "ds_rec_count"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "LoadTimestamp"
+         SqlType "11"
+         Precision "0"
+         Scale "0"
+         Derivation "CurrentTimestamp()"
+         ParsedDerivation "CurrentTimestamp()"
+         LevelNo "0"
+         Occurs "0"
+         PadChar ""
+         ExtendedPrecision "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  LoadNum:string[max=10];
+  Item_Load_Count:nullable string[max=15];
+  LoadTimestamp:timestamp;
+  outRec:*;
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "648"
+      TopTextPos "183"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V14S0P4"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxInput"
+      Readonly "0"
+      Name "Aggregator_Load_Counts"
+      Partner "V13S3"
+      LinkType "1"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  Item_Load_Count:nullable dfloat;
+  inRec:*;
+)
+=+=+=+=
+      END DSSUBRECORD
+   END DSRECORD
+END DSJOB

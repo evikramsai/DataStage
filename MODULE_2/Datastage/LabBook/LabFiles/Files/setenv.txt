@@ -1,0 +1,5 @@
+. /home/dsadm/Ascential/DataStage/DSEngine/dsenv
+export APT_CONFIG_FILE=/home/dsadm/Ascential/DataStage/Configurations/default.apt
+export APT_ORCHHOME=/home/dsadm/Ascential/DataStage/PXEngine
+export PATH=$PATH:$APT_ORCHHOME/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$APT_ORCHHOME/lib

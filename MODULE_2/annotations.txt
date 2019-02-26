@@ -1,0 +1,14 @@
+annotations (General)
+double click to open properties
+---------------------------------------------
+Sequential file(file)
+to read and write data
+--------------------------------
+head (Development)
+used to diplay top rows 
+check partition number
+-------------------------------
+peek(Development)
+to see the data flow
+we can select number of rows
+---------------------------------------

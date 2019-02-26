@@ -1,0 +1,11 @@
+record
+  {final_delim=end, delim=',', quote=double}
+(
+  CustID:int32;
+  FName:string[max=50];
+  LName:string[max=50];
+  Address:string[max=100];
+  State:string[2];
+  Zip:string[5];
+  Entry_Date:string[6];
+)

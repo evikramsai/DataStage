@@ -1,0 +1,63 @@
+CREATE TABLE STG_EMPLOYEE_DETAILS(
+EMP_ID INTEGER NOT NULL,
+FIRST_NAME VARCHAR(50) ,
+LAST_NAME VARCHAR(50) ,
+PHONE_NUMBER VARCHAR(10) ,
+HIRE_DATE DATE NOT NULL,
+TERMINATION_DATE DATE ,
+GENDER VARCHAR(1),
+MANAGER_ID INTEGER,
+SALARY INTEGER,
+SOURCE VARCHAR(100) NOT NULL,
+MUTATION_DATE DATE NOT NULL
+);
+======================================
+
+CREATE TABLE Dim_Employee(
+Surg_Emp INTEGER NOT NULL,
+Emp_ID INTEGER NOT NULL,
+Emp_Name VARCHAR(100),
+Phone_Number VARCHAR(10),
+Hire_date DATE,
+Termination_date DATE,
+Gender VARCHAR(6),
+Manager_ID INTEGER,
+Salary INTEGER,
+Source VARCHAR(100),
+Begin_Date DATE,
+End_Date DATE,
+Status VARCHAR(1)
+);
+
+-------------------------------------------------------------------------------
+CREATE TABLE Dim_Longitivity(
+Group_id INTEGER NOT NULL,
+Emp_ID INTEGER NOT NULL
+);
+========================================
+
+CREATE TABLE Error_log(
+Package_Name VARCHAR(255) NOT NULL,
+Error_Description VARCHAR(255) NOT NULL,
+key_column_name VARCHAR(255),
+key_value VARCHAR(255),
+attribute_name VARCHAR(255),
+attribute_value VARCHAR(255),
+source VARCHAR(255) NOT NULL,
+validation_run_dt VARCHAR(255) NOT NULL
+);
+
+
+
+CREATE TABLE STG_EMPLOYEE_DETAILS_26(
+EMP_ID INTEGER NOT NULL,
+FIRST_NAME VARCHAR(50) ,
+LAST_NAME VARCHAR(50) ,
+PHONE_NUMBER VARCHAR(10) ,
+HIRE_DATE DATE NOT NULL,
+TERMINATION_DATE DATE ,
+GENDER VARCHAR(1),
+MANAGER_ID INTEGER,
+SALARY INTEGER
+);
+

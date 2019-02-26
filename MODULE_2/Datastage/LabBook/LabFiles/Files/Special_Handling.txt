@@ -1,0 +1,11 @@
+CODE,DESCRIPTION
+0,Monthy Delivery Only
+1,Monday Delivery Only
+2,Tuesday Delivery Only
+3,Wednesday Delivery Only
+4,Thurday Delivery Only
+5,Friday Delivery Only
+6,Saturday Delivery Only
+7,Weekly Delivery Only
+8,Bi-Weekly Delivery Only
+9,Ship only by request

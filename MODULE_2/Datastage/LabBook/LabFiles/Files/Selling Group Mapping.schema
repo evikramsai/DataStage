@@ -1,0 +1,8 @@
+record
+  {final_delim=end, record_delim='\n', delim=',', quote=double, padchar='#'}
+(
+  Selling_Group_Code:int32 {quote=none};
+  Selling_Group_Desc:string[max=50];
+  Special_Handling_Code:int32 {quote=none,};
+  Distribution_Channel_Description:string[max=50];
+)
